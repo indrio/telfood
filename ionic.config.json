@@ -1,0 +1,8 @@
+{
+  "name": "TelFood",
+  "app_id": "dc483181",
+  "type": "ionic-angular",
+  "integrations": {
+    "cordova": {}
+  }
+}
