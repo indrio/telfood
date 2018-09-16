@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, LoadingController, Events } from 'ionic-angular';
 import { CartProvider } from '../../providers/cart/cart';
 import { OrderProvider } from '../../providers/order/order';
 import { AuthServiceProvider } from '../../providers/auth-service/auth-service';
@@ -18,7 +18,8 @@ import { HomePage } from '../home/home';
   templateUrl: 'cart.html',
 })
 export class CartPage {
-    order:{
+    
+    order: {
         order_date:number,
         username:string,
         cartItems:Array<{
@@ -32,15 +33,18 @@ export class CartPage {
         }>,
         totalPrice:number, 
         delivery_address:string, 
-        delivery_phone:string
+        delivery_phone:string,
+        status:string
     };
     
     constructor(public nav: NavController, 
               public navParams: NavParams, 
               private alertCtrl: AlertController,
+              private loadingCtrl: LoadingController,
               private cartService: CartProvider,
               private orderService: OrderProvider, 
-              private auth: AuthServiceProvider) {
+              private auth: AuthServiceProvider,
+              private events: Events) {
                   
                   this.order = {
                       order_date: new Date().getTime(),
@@ -48,7 +52,8 @@ export class CartPage {
                       cartItems:[],
                       totalPrice:0, 
                       delivery_address:'', 
-                      delivery_phone:''
+                      delivery_phone:'',
+                      status:'open'
                   };
         
                   this.getCartItems();
@@ -57,6 +62,9 @@ export class CartPage {
                   
     }
     
+    ionViewDidLeave() {
+        this.events.unsubscribe('orderSubmited');
+    }
   
   public decrement(item) {
       if(item.qty > 0) {
@@ -148,9 +156,38 @@ export class CartPage {
   public doOrder(order) {
       console.log(order);
       
+      let loggedUser = this.auth.getUserInfo();
+      
+      console.log(loggedUser);
+      
+      order.order_date = new Date().getTime();
+      order.username = loggedUser.username;
+      order.status = 'open';
+      
+
+      let loader = this.loadingCtrl.create({
+          content: 'Submit Order..'
+      });
+      
+      loader.present();
+      
+      this.orderService.submitOrder(order);
+      
       this.cartService.removeAllCartItems();
 
       this.nav.setRoot(HomePage);
+      
+      loader.dismiss();
+      /*
+      this.events.subscribe('orderSubmited', () => {
+          this.cartService.removeAllCartItems();
+
+          this.nav.setRoot(HomePage);
+          
+          loader.dismiss();
+      });
+      */
+      
   }
 
 }

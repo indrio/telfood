@@ -13,6 +13,7 @@ import firebase from 'firebase';
 @Injectable()
 export class OrderProvider {
     orderRef = firebase.database().ref("order");
+    
     orders: Array<{
         order_date:number,
         username:string,
@@ -27,8 +28,9 @@ export class OrderProvider {
         }>,
         totalPrice:number, 
         delivery_address:string, 
-        delivery_phone:string
-    }> = [];
+        delivery_phone:string,
+        status:string
+    }>;
 
   constructor(public events: Events) { }
 
@@ -49,6 +51,7 @@ export class OrderProvider {
                           totalPrice: tempOrders[key].totalPrice,
                           delivery_address: tempOrders[key].delivery_address,
                           delivery_phone: tempOrders[key].delivery_phone,
+                          status: tempOrders[key].status
                       };
                   
                       this.orders.push(singleOrder);
@@ -59,15 +62,31 @@ export class OrderProvider {
       }
   }
   
+  submitOrder(order) {
+      console.log('submitOrder');
+      console.log(order);
+      
+      this.orderRef.push(order)
+      .then(function() {
+          console.log('Synchronization succeeded');
+      });
+      
+      //this.events.publish('orderSubmited');
+  }
+  
   setStatus(order_id, status) {
+      console.log('order_id : '+order_id);
+      console.log('status : '+status);
+      
       this.orderRef.child(order_id).child('status').set(status)
       .then(function() {
           console.log('Synchronization succeeded');
-          this.events.publish('menusLoaded');
       })
       .catch(function(error) {
           console.log('Synchronization failed');
-      });   
+      }); 
+      
+      this.events.publish('statusOrderupdated');
   }
   
 }

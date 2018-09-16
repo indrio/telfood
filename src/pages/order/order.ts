@@ -30,7 +30,8 @@ export class OrderPage {
         }>,
         totalPrice:number, 
         delivery_address:string, 
-        delivery_phone:string
+        delivery_phone:string,
+        status:string
     }>;
     
     constructor(public navCtrl: NavController, 
@@ -50,7 +51,6 @@ export class OrderPage {
     }
     
     getOrders(loggedUser) {
-        console.log(loggedUser);
         let loader = this.loadingCtrl.create({
             content: 'Loading Orders..'
         });
