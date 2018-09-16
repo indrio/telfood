@@ -1,7 +1,10 @@
 <ion-header>
   <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu" color="dark"></ion-icon>
+    </button>
       <div class="titleicon">
-          <img src="../../assets/imgs/Logo.png" width="100px"/>
+          <img src="../../assets/imgs/logo-white.png" width="100px"/>
       </div>
       <ion-buttons end>
           <button ion-button icon-only (click)="cart()">
@@ -14,32 +17,14 @@
     </ion-toolbar>
 </ion-header>
 
-<ion-content class="card-background-page" padding>
+<ion-content padding>
     <ion-grid>
         <ion-row>
-            <ion-col col-6 col-sm>
-                <ion-card>
-                    <img src="../../assets/imgs/categories/martabak.png"/>
-                    <div class="card-title">Martabak</div>
-                  </ion-card>
-            </ion-col>
-            <ion-col col-6 col-sm>
-                <ion-card>
-                    <img src="../../assets/imgs/categories/sate.png"/>
-                    <div class="card-title">Sate</div>
-                  </ion-card>
-            </ion-col>
-            <ion-col col-6 col-sm>
-                <ion-card>
-                    <img src="../../assets/imgs/categories/mie-ayam.png"/>
-                    <div class="card-title">Mie Ayam</div>
-                  </ion-card>
-            </ion-col>
-            <ion-col col-6 col-sm>
-                <ion-card>
-                    <img src="../../assets/imgs/categories/bakmie.png"/>
-                    <div class="card-title">Bakmie</div>
-                  </ion-card>
+            <ion-col col-6 col-sm *ngFor="let category of categories; index as i">
+                <ion-card (click)="detailMerchant($event, category)">
+                  <img src="../../assets/imgs/categories/{{category.icon}}.png"/>
+                  <ion-card-content>{{category.title}}</ion-card-content>
+                </ion-card>
             </ion-col>
         </ion-row>
     </ion-grid>

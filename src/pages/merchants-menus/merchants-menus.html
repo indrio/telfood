@@ -1,0 +1,55 @@
+<ion-header>
+  <ion-navbar>
+      <div class="titleicon">
+          <img src="../../assets/imgs/logo-white.png" width="100px"/>
+      </div>
+      <ion-buttons end>
+          <button ion-button icon-only (click)="cart()">
+              <ion-icon name="cart"></ion-icon>
+          </button>
+      </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content class="merchant-menu-content"  padding>
+    <ion-row class="logo-row">
+      <ion-col width-100>
+        <img width="100%" height="40%" src="../../assets/imgs/categories/{{selectedMerchant.icon}}.png"/>
+      </ion-col>
+    </ion-row>
+    
+    <ion-card-content>
+        <ion-card-title>
+            {{selectedMerchant.name}}
+        </ion-card-title>
+        {{selectedMerchant.address}}
+    </ion-card-content>
+    <ion-row>
+        <ion-col></ion-col>
+        <ion-col center text-right>
+            <ion-note>{{selectedMerchant.open_hour}}</ion-note>
+            <ion-badge item-end *ngIf="checkShopStatus(selectedMerchant.open_hour)" color="primary">
+                Open
+            </ion-badge>
+            <ion-badge item-end *ngIf="!checkShopStatus(selectedMerchant.open_hour)" color="danger">
+                Close
+            </ion-badge>
+        </ion-col>
+    </ion-row>
+    <hr/>
+    <ion-list>
+      <ion-item *ngFor="let menu of menus; index as i">
+        <ion-thumbnail item-start>
+          <img src="../../assets/imgs/categories/{{menu.photo}}.png">
+        </ion-thumbnail>
+        <h2>{{menu.title}}</h2>
+        <p>{{menu.description}}</p>
+        <br/>
+        <h2>Rp.{{menu.price}}</h2>
+        <button ion-button clear item-end *ngIf="checkShopStatus(selectedMerchant.open_hour)">
+            <ion-icon name="add-circle" color="danger"></ion-icon>
+        </button>
+      </ion-item>
+    </ion-list>
+</ion-content>

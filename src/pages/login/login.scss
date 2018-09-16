@@ -1,6 +1,6 @@
 page-login {
     .login-content {
-        background-image: url('../../assets/imgs/background-sized.jpg');
+        background-image: url('../../assets/imgs/background-sized.png');
         background-repeat: no-repeat;
         background-size:cover;
         .logo-row {
@@ -8,28 +8,34 @@ page-login {
             padding-bottom: 20px;
         }
         .login-box {
-            padding: 20px 20px 0px 20px;
+            padding: 20px 0px 0px 0px;
             margin-top: 30px;
         }
         .login-input {
+            border-radius: 30px !important;
+            padding-left: 30px !important;
             font-size:1.5em;
+            margin-bottom: 10px;
+            border: 2px solid #F20A0A;
         }
         .login-input::-webkit-input-placeholder {
-            color: red;
+            color: #F20A0A;
         }
         ion-row {
             align-items: center;
             text-align: center;
         }
+        /*
         ion-item {
             border-radius: 30px !important;
             padding-left: 30px !important;
-            font-size: 0.9em;
+            //font-size: 0.9em;
             margin-bottom: 10px;
-            border: 1px solid #ffffff;
+            border: 1px solid #F20A0A;
             border-bottom: 0px !important;
             box-shadow: none !important;
         }
+        */
         .signup-col {
             margin: 0px 16px 0px 16px;
             padding-bottom: 20px;
@@ -47,8 +53,11 @@ page-login {
             opacity:unset;
             font-weight: bold;
         }
+        .submit-btn:hover{
+            background-color: #F20A0A !important;
+        }
         .register-btn {
-            color: #ffffff;
+            color: #F20A0A;
             font-size: 0.8em;
         }
     }

@@ -17,7 +17,7 @@ import { AuthServiceProvider } from '../../providers/auth-service/auth-service';
 })
 export class LoginPage {
     loading: Loading;
-    registerCredentials = { email: '', password: '' };
+    registerCredentials = { username: '', password: '' };
     
     constructor(private nav: NavController, private auth: AuthServiceProvider, private alertCtrl: AlertController, private loadingCtrl: LoadingController) {
     }
@@ -27,7 +27,8 @@ export class LoginPage {
     }
       
     public login(){
-        this.showLoading()
+        this.showLoading();
+        
         this.auth.login(this.registerCredentials).subscribe(allowed => {
             if (allowed) {
                 this.nav.setRoot(HomePage);

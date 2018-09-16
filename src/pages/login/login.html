@@ -1,10 +1,8 @@
 <ion-content class="login-content" padding>
   <ion-row class="logo-row">
-    <ion-col></ion-col>
-    <ion-col width-67>
-      <img src="assets/imgs/logo.png"/>
+    <ion-col width-100>
+      <img src="assets/imgs/logo-dark.png"/>
     </ion-col>
-    <ion-col></ion-col>
   </ion-row>
   <div class="login-box">
     <form (ngSubmit)="login()" #registerForm="ngForm">
@@ -13,7 +11,7 @@
           <ion-list inset>
             
             <ion-item>
-              <ion-input class="login-input" type="text" placeholder="Username" name="email" [(ngModel)]="registerCredentials.email" required></ion-input>
+              <ion-input class="login-input" type="text" placeholder="Username" name="username" [(ngModel)]="registerCredentials.username" required></ion-input>
             </ion-item>
             
             <ion-item>

@@ -1,22 +1,21 @@
-page-home {
+page-merchants-menus {
     .toolbar-background {
         background-color:#F20A0A;
+    }
+    .toolbar-title {
+        color: #FFF;
+        position: absolute;
+        width: 100%;
+        left: 0;
+        text-align:center;
     }
     
     .titleicon {
         position: absolute;
-        width: 100%;
-        left: 0;
+        width: 50%;
+        left: 25%;
         bottom: 0;
         text-align:center;
-    }
-    
-    .searchbar-input {
-        border-radius: 30px !important;
-        padding-left: 30px !important;
-        border: 1px solid #ffffff;
-        border-bottom: 0px !important;
-        box-shadow: none !important;
     }
     
     .card-background-page {
@@ -42,5 +41,23 @@ page-home {
         color: #fff;
       }
 
+    }
+
+    .merchant-menu-content {
+    .logo-row {
+        margin:-20px;
+        padding-bottom: 20px;
+    }
+    ion-row {
+        align-items: center;
+        text-align: center;
+    }
+    p { 
+        word-break: break-all;
+        white-space: normal;
+    }
+    ion-icon {
+        font-size:31px;
+    }
     }
 }

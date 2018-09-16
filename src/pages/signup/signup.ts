@@ -16,7 +16,7 @@ import { AuthServiceProvider } from '../../providers/auth-service/auth-service';
 })
 export class SignupPage {
     createSuccess = false;
-    registerCredentials = { email: '', password: '' };
+    registerCredentials = { username: '', password: '' };
     
     constructor(private nav: NavController, private auth: AuthServiceProvider, private alertCtrl: AlertController) { }
     

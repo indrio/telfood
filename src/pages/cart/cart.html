@@ -1,0 +1,76 @@
+<ion-header>
+  <ion-navbar>
+      <div class="titleicon">
+          <img src="../../assets/imgs/logo-white.png" width="100px"/>
+      </div>
+  </ion-navbar>
+
+  <ion-toolbar>
+      <ion-title>Cart</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+    <ion-card>
+        <ion-card-header>
+            <ion-grid>
+                <ion-row>
+                    <ion-col>Items to order</ion-col>
+                    <ion-col>
+                        <span float-right>Total {{order.totalPrice | number:0}}</span>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+        </ion-card-header>
+        <ion-list>
+            <ion-item *ngFor="let item of order.cartItems; index as i">
+                <ion-grid>
+                    <ion-row>
+                        <ion-col>{{item.title}}</ion-col>
+                        <ion-col>
+                            <div float-right>{{item.price | number:0}}</div>
+                        </ion-col>
+                    </ion-row>
+                    <ion-row>
+                        <ion-col>
+                            <p>{{item.notes}}<p>
+                            <p><button ion-button clear small (click)="presentPrompt(item)">notes</button></p>
+                        </ion-col>
+                        <ion-col>
+                            <div float-right>
+                            <ion-icon name="remove-circle" (click)="decrement(item)" color="danger"></ion-icon>
+                                {{item.qty}}
+                            <ion-icon name="add-circle" (click)="increment(item)" color="danger"></ion-icon>
+                            </div>
+                        </ion-col>
+                    </ion-row>
+                </ion-grid>
+            </ion-item>
+        </ion-list>
+    </ion-card>
+    <ion-card>
+        <ion-card-header>
+            Deliver to
+        </ion-card-header>
+        <ion-list>
+
+          <ion-item>
+            <ion-label floating>Address</ion-label>
+            {{userOrder}}
+            <ion-input type="text" [(ngModel)]="order.delivery_address" name="address"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label floating>Phone</ion-label>
+            <ion-input type="text" [(ngModel)]="order.delivery_phone" name="phone"></ion-input>
+          </ion-item>
+
+        </ion-list>
+    </ion-card>
+</ion-content>
+
+<ion-footer>
+    <ion-toolbar color="secondary">
+        <button ion-button clear full large (click)="showConfirm(order)">ORDER</button>
+    </ion-toolbar>
+</ion-footer>

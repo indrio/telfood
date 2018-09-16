@@ -1,0 +1,46 @@
+<ion-header>
+  <ion-navbar>
+      <div class="titleicon">
+          <img src="../../assets/imgs/logo-white.png" width="100px"/>
+      </div>
+      <ion-buttons end>
+          <button ion-button icon-only (click)="cart()">
+              <ion-icon name="cart"></ion-icon>
+          </button>
+      </ion-buttons>
+  </ion-navbar>
+
+  <ion-toolbar>
+      <ion-title>{{selectedCategory.title}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content padding>
+    <ion-grid>
+        <ion-row>
+            <ion-col col-12 col-sm *ngFor="let merchant of merchants; index as i">
+                <ion-card (click)="merchantMenus($event, merchant)">
+                  <img src="../../assets/imgs/categories/{{merchant.icon}}.png"/>
+                  <ion-card-content>
+                      <ion-card-title>
+                          {{merchant.name}}
+                      </ion-card-title>
+                      {{merchant.address}}
+                  </ion-card-content>
+                  <ion-row>
+                      <ion-col></ion-col>
+                      <ion-col center text-right>
+                          <ion-badge item-end *ngIf="checkShopStatus(merchant.open_hour)" color="primary">
+                              Open
+                          </ion-badge>
+                          <ion-badge item-end *ngIf="!checkShopStatus(merchant.open_hour)" color="danger">
+                              Close
+                          </ion-badge>
+                      </ion-col>
+                  </ion-row>
+                </ion-card>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+</ion-content>

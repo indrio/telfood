@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, NavParams, LoadingController, Events } from 'ionic-angular';
 import { AuthServiceProvider } from '../../providers/auth-service/auth-service';
+import { CategoryProvider } from '../../providers/category/category';
 
 @Component({
   selector: 'page-home',
@@ -9,16 +10,60 @@ import { AuthServiceProvider } from '../../providers/auth-service/auth-service';
 export class HomePage {
     username = '';
     email = '';
+
+    categories: Array<{id: string, title: string, icon: string}>;
     
-    constructor(private nav: NavController, private auth: AuthServiceProvider) {
-        //let info = this.auth.getUserInfo();
-        //this.username = info['name'];
-        //this.email = info['email'];
+    constructor(private nav: NavController, 
+                private navParams: NavParams, 
+                private auth: AuthServiceProvider,
+                private loadingCtrl: LoadingController,
+                private categoryService: CategoryProvider,
+                private events: Events) {
+        
+    }
+    
+    ionViewWillEnter() {
+        this.getCategories();
+    }
+    
+    ionViewDidLeave() {
+        this.events.unsubscribe('categoriesLoaded');
     }
 
     public logout() {
         this.auth.logout().subscribe(succ => {
             this.nav.setRoot('LoginPage')
+        });
+    }
+    
+    public detailMerchant(event, category) {
+        this.nav.push('MerchantsPage', {
+            category: category
+        });
+    }
+    
+    public cart() {
+        this.nav.push('CartPage');
+    }
+    
+    getCategories() {
+        
+        let loader = this.loadingCtrl.create({
+            content: 'Loading Categories..'
+        });
+        
+        loader.present();
+        
+        this.categoryService.getCategories();
+        
+        this.events.subscribe('categoriesLoaded', () => {
+            this.categories = this.categoryService.categories;
+            /*
+            if(this.categories.length>0){
+                this.promoImagesLoaded =true;
+            }
+            */
+            loader.dismiss();
         });
     }
 }

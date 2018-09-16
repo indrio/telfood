@@ -4,12 +4,14 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 
 export class User {
-  name: string;
-  email: string;
+  username: string;
+  password: string;
+  user_type: string;
  
-  constructor(name: string, email: string) {
-    this.name = name;
-    this.email = email;
+  constructor(username: string, password: string, user_type: string) {
+    this.username = name;
+    this.password = password;
+    this.user_type = user_type;
   }
 }
 /*
@@ -23,13 +25,13 @@ export class AuthServiceProvider {
   currentUser: User;
   
   public login(credentials) {
-      if (credentials.email === null || credentials.password === null) {
+      if (credentials.username === null || credentials.password === null) {
           return Observable.throw("Please insert credentials");
       } else {
           return Observable.create(observer => {
               // At this point make a request to your backend to make a real check!
-              let access = (credentials.password === "pass" && credentials.email === "email");
-              this.currentUser = new User('Simon', 'saimon@devdactic.com');
+              let access = (credentials.password === "12345" && credentials.username === "6210101");
+              this.currentUser = new User(credentials.username, credentials.password, 'merchant');
               observer.next(access);
               observer.complete();
           });
