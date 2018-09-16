@@ -4,6 +4,7 @@ import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
+import { OrderPage } from '../pages/order/order';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -24,7 +25,8 @@ firebase.initializeApp(config.firebasConfig);
 @NgModule({
   declarations: [
     MyApp,
-    HomePage
+    HomePage,
+    OrderPage
   ],
   imports: [
     BrowserModule,
@@ -34,7 +36,8 @@ firebase.initializeApp(config.firebasConfig);
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    HomePage
+    HomePage,
+    OrderPage
   ],
   providers: [
     StatusBar,

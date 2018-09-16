@@ -1,5 +1,8 @@
-import { HttpClient } from '@angular/common/http';
+//import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+
+import { Events } from 'ionic-angular';
+import firebase from 'firebase';
 
 /*
   Generated class for the OrderProvider provider.
@@ -9,9 +12,62 @@ import { Injectable } from '@angular/core';
 */
 @Injectable()
 export class OrderProvider {
+    orderRef = firebase.database().ref("order");
+    orders: Array<{
+        order_date:number,
+        username:string,
+        cartItems:Array<{
+            id: string, 
+            title: string, 
+            description: string, 
+            photo: string, 
+            qty : number, 
+            price: number,
+            notes:string
+        }>,
+        totalPrice:number, 
+        delivery_address:string, 
+        delivery_phone:string
+    }> = [];
 
-  constructor(public http: HttpClient) {
-    console.log('Hello OrderProvider Provider');
+  constructor(public events: Events) { }
+
+  
+  getOrders(user) {
+      if(user && user.user_type == 'user') {
+          this.orderRef.orderByChild('username').equalTo(user.username).once('value', (snap) => {
+              this.orders = [];
+              if (snap.val()) {
+                  var tempOrders = snap.val();
+              
+                  for (var key in tempOrders) {
+                      let singleOrder = {
+                          id: key,
+                          order_date: tempOrders[key].order_date,
+                          username: tempOrders[key].username,
+                          cartItems: tempOrders[key].cartItems,
+                          totalPrice: tempOrders[key].totalPrice,
+                          delivery_address: tempOrders[key].delivery_address,
+                          delivery_phone: tempOrders[key].delivery_phone,
+                      };
+                  
+                      this.orders.push(singleOrder);
+                  }
+              }
+              this.events.publish('ordersLoaded');
+          });
+      }
   }
-
+  
+  setStatus(order_id, status) {
+      this.orderRef.child(order_id).child('status').set(status)
+      .then(function() {
+          console.log('Synchronization succeeded');
+          this.events.publish('menusLoaded');
+      })
+      .catch(function(error) {
+          console.log('Synchronization failed');
+      });   
+  }
+  
 }

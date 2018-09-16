@@ -103,12 +103,6 @@ export class MerchantsMenusPage {
         
         this.events.subscribe('menusLoaded', () => {
             this.menus = this.menuService.menus;
-            
-            /*
-            if(this.merchants.length>0){
-                this.promoImagesLoaded =true;
-            }
-            */
             loader.dismiss();
         });
     }

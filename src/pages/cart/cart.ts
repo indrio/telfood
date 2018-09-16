@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 import { CartProvider } from '../../providers/cart/cart';
 import { OrderProvider } from '../../providers/order/order';
+import { AuthServiceProvider } from '../../providers/auth-service/auth-service';
+import { HomePage } from '../home/home';
 
 /**
  * Generated class for the CartPage page.
@@ -17,6 +19,8 @@ import { OrderProvider } from '../../providers/order/order';
 })
 export class CartPage {
     order:{
+        order_date:number,
+        username:string,
         cartItems:Array<{
             id: string, 
             title: string, 
@@ -35,9 +39,12 @@ export class CartPage {
               public navParams: NavParams, 
               private alertCtrl: AlertController,
               private cartService: CartProvider,
-              private orderService: OrderProvider) {
+              private orderService: OrderProvider, 
+              private auth: AuthServiceProvider) {
                   
                   this.order = {
+                      order_date: new Date().getTime(),
+                      username: this.auth.getUserInfo().username,
                       cartItems:[],
                       totalPrice:0, 
                       delivery_address:'', 
@@ -46,30 +53,9 @@ export class CartPage {
         
                   this.getCartItems();
         
-                  console.log('order :');
-                  console.log(this.order);
-        
                   this.sumTotal();
                   
     }
-
-    /*
-    ionViewWillEnter() {
-        this.order = {
-            cartItems:[],
-            totalPrice:0, 
-            delivery_address:'', 
-            delivery_phone:''
-        };
-        
-        this.getCartItems();
-        
-        console.log('order :');
-        console.log(this.order);
-        
-        this.sumTotal();
-    }
-    */
     
   
   public decrement(item) {
@@ -90,40 +76,10 @@ export class CartPage {
   
   getCartItems() {
       this.cartService.getCartItems().then(result => {
-          console.log('result');
-          console.log(result);
-          
             if (result) {
                 this.order = result;
             }
-            
-            console.log('this.order');
-            console.log(this.order);
-            
         });
-      
-      /*
-      this.order.cartItems = [
-          {
-              id: '001',
-              title: 'Martabak Manis Standar',
-              description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam id est eget mi lacinia varius.',
-              photo: 'martabak',
-              qty: 1,
-              price: 20000,
-              notes:''
-          },
-          {
-              id: '002',
-              title: 'Martabak Manis Keju',
-              description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam id est eget mi lacinia varius.',
-              photo: 'martabak',
-              qty: 1,
-              price: 30000,
-              notes:''
-          }
-      ];
-      */
   }
   
   sumTotal() {
@@ -176,15 +132,11 @@ export class CartPage {
           buttons: [
               {
                   text: 'Cancel',
-                  handler: () => {
-                      console.log('Cancel clicked');
-                  }
+                  handler: () => { }
               },
               {
                   text: 'Confirm',
                   handler: () => {
-                      console.log('Confirm clicked');
-                      
                       this.doOrder(order);
                   }
               }
@@ -195,6 +147,10 @@ export class CartPage {
   
   public doOrder(order) {
       console.log(order);
+      
+      this.cartService.removeAllCartItems();
+
+      this.nav.setRoot(HomePage);
   }
 
 }

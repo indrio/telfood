@@ -13,7 +13,7 @@ export class User {
   merchant_id: string;
  
   constructor(username: string, password: string, user_type: string, merchant_id) {
-    this.username = name;
+    this.username = username;
     this.password = password;
     this.user_type = user_type;
     this.merchant_id = merchant_id;
