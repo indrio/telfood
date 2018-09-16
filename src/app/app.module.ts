@@ -11,6 +11,10 @@ import { AuthServiceProvider } from '../providers/auth-service/auth-service';
 import { MerchantMenuProvider } from '../providers/merchant-menu/merchant-menu';
 import { MerchantProvider } from '../providers/merchant/merchant';
 import { CategoryProvider } from '../providers/category/category';
+import { CartProvider } from '../providers/cart/cart';
+import { OrderProvider } from '../providers/order/order';
+
+import { IonicStorageModule } from '@ionic/storage';
 
 import { config } from './../config/app.config';
 import * as firebase from 'firebase';
@@ -25,6 +29,7 @@ firebase.initializeApp(config.firebasConfig);
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
+    IonicStorageModule.forRoot()
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -38,7 +43,9 @@ firebase.initializeApp(config.firebasConfig);
     AuthServiceProvider,
     MerchantMenuProvider,
     MerchantProvider,
-    CategoryProvider
+    CategoryProvider,
+    CartProvider,
+    OrderProvider
   ]
 })
 export class AppModule {}

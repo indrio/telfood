@@ -62,7 +62,6 @@ export class MerchantsPage {
     }
     
     getMerchants(category) {
-        console.log(category);
         let loader = this.loadingCtrl.create({
             content: 'Loading Merchants..'
         });
@@ -74,8 +73,6 @@ export class MerchantsPage {
         
         this.events.subscribe('merchantsLoaded', () => {
             this.merchants = this.merchantService.merchants;
-        
-            console.log(this.merchants);
             
             /*
             if(this.merchants.length>0){

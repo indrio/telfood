@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
+import { CartProvider } from '../../providers/cart/cart';
+import { OrderProvider } from '../../providers/order/order';
 
 /**
  * Generated class for the CartPage page.
@@ -14,67 +16,114 @@ import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angu
   templateUrl: 'cart.html',
 })
 export class CartPage {
+    order:{
+        cartItems:Array<{
+            id: string, 
+            title: string, 
+            description: string, 
+            photo: string, 
+            qty : number, 
+            price: number,
+            notes:string
+        }>,
+        totalPrice:number, 
+        delivery_address:string, 
+        delivery_phone:string
+    };
     
-  order:{
-      cartItems:Array<{
-          product_id: string, 
-          title: string, 
-          description: string, 
-          photo: string, 
-          qty : number, 
-          price: number,
-          notes:string
-      }>,
-      totalPrice:number, 
-      delivery_address:string, 
-      delivery_phone:string
-  };
-  
-  constructor(public nav: NavController, public navParams: NavParams, private alertCtrl: AlertController) {
-      this.order = {
-          cartItems:[],
-          totalPrice:0, 
-          delivery_address:'', 
-          delivery_phone:''
-      }
-      
-      this.getCartItems();
-      this.sumTotal();
-  }
+    constructor(public nav: NavController, 
+              public navParams: NavParams, 
+              private alertCtrl: AlertController,
+              private cartService: CartProvider,
+              private orderService: OrderProvider) {
+                  
+                  this.order = {
+                      cartItems:[],
+                      totalPrice:0, 
+                      delivery_address:'', 
+                      delivery_phone:''
+                  };
+        
+                  this.getCartItems();
+        
+                  console.log('order :');
+                  console.log(this.order);
+        
+                  this.sumTotal();
+                  
+    }
+
+    /*
+    ionViewWillEnter() {
+        this.order = {
+            cartItems:[],
+            totalPrice:0, 
+            delivery_address:'', 
+            delivery_phone:''
+        };
+        
+        this.getCartItems();
+        
+        console.log('order :');
+        console.log(this.order);
+        
+        this.sumTotal();
+    }
+    */
+    
   
   public decrement(item) {
       if(item.qty > 0) {
-          this.order.cartItems.find(x => x.product_id == item.product_id).qty--;
+          this.order.cartItems.find(x => x.id == item.id).qty--;
+      
+          this.cartService.removeFromCart(item);
           this.sumTotal();
       }
   }
   
   public increment(item) {
-      this.order.cartItems.find(x => x.product_id == item.product_id).qty++;
+      this.order.cartItems.find(x => x.id == item.id).qty++;
+          
+      this.cartService.addToCart(item);
       this.sumTotal();
   }
   
   getCartItems() {
+      this.cartService.getCartItems().then(result => {
+          console.log('result');
+          console.log(result);
+          
+            if (result) {
+                this.order = result;
+            }
+            
+            console.log('this.order');
+            console.log(this.order);
+            
+        });
+      
+      /*
       this.order.cartItems = [
           {
-              product_id: '001',
+              id: '001',
               title: 'Martabak Manis Standar',
               description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam id est eget mi lacinia varius.',
               photo: 'martabak',
               qty: 1,
               price: 20000,
-              notes:'Yang manis banget'
+              notes:''
           },
           {
-              product_id: '002',
+              id: '002',
               title: 'Martabak Manis Keju',
               description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam id est eget mi lacinia varius.',
               photo: 'martabak',
               qty: 1,
               price: 30000,
-              notes:'xxxxxxxxx'
+              notes:''
           }
       ];
+      */
   }
   
   sumTotal() {

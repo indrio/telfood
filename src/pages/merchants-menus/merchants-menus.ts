@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, LoadingController, Events } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, LoadingController, Events, ToastController } from 'ionic-angular';
 import { MerchantMenuProvider } from '../../providers/merchant-menu/merchant-menu';
+import { CartProvider } from '../../providers/cart/cart';
 
 /**
  * Generated class for the MerchantsMenusPage page.
@@ -23,7 +24,9 @@ export class MerchantsMenusPage {
               public navParams: NavParams,
               private loadingCtrl: LoadingController,
               private menuService: MerchantMenuProvider,
-              private events: Events) {
+              private events: Events,
+              private cartService: CartProvider,
+              public toastCtrl: ToastController) {
                   
         this.selectedMerchant = navParams.get('merchant');
     }
@@ -56,12 +59,43 @@ export class MerchantsMenusPage {
         this.nav.push('CartPage');
     }
     
+    public addToCart(menu) {
+        let cartItem = {
+            id: menu.id, 
+            title: menu.title, 
+            description: menu.description, 
+            photo: menu.photo, 
+            qty : 1, 
+            price: menu.price,
+            notes: menu.notes
+        };
+        
+        this.cartService.addToCart(cartItem).then((val) => {
+            console.log('val');
+            console.log(val);
+            
+            this.presentToast(menu.title);
+        });
+    }
+    presentToast(name) {
+        let toast = this.toastCtrl.create({
+            message: `${name} has been added to cart`,
+            duration: 3000,
+            showCloseButton: true,
+            closeButtonText: 'Close'
+        });
+ 
+        toast.onDidDismiss(() => {
+            //this.nav.push('CartPage');
+        });
+        toast.present();
+    }
+    
     getMenus(merchant) {
         console.log(merchant);
         let loader = this.loadingCtrl.create({
             content: 'Loading Menu Merchants..'
         });
-        
         
         loader.present();
         
@@ -69,8 +103,6 @@ export class MerchantsMenusPage {
         
         this.events.subscribe('menusLoaded', () => {
             this.menus = this.menuService.menus;
-        
-            console.log(this.menus);
             
             /*
             if(this.merchants.length>0){

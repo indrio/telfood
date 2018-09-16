@@ -47,7 +47,9 @@
         <p>{{menu.description}}</p>
         <br/>
         <h2>Rp.{{menu.price}}</h2>
-        <button ion-button clear item-end *ngIf="checkShopStatus(selectedMerchant.open_hour)">
+        <button ion-button clear item-end 
+                *ngIf="checkShopStatus(selectedMerchant.open_hour)" 
+                (click)="addToCart(menu)">
             <ion-icon name="add-circle" color="danger"></ion-icon>
         </button>
       </ion-item>
