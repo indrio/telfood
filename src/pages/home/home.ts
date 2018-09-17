@@ -8,8 +8,6 @@ import { CategoryProvider } from '../../providers/category/category';
   templateUrl: 'home.html'
 })
 export class HomePage {
-    username = '';
-    email = '';
 
     categories: Array<{id: string, title: string, icon: string}>;
     
@@ -58,11 +56,6 @@ export class HomePage {
         
         this.events.subscribe('categoriesLoaded', () => {
             this.categories = this.categoryService.categories;
-            /*
-            if(this.categories.length>0){
-                this.promoImagesLoaded =true;
-            }
-            */
             loader.dismiss();
         });
     }

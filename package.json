@@ -1,6 +1,6 @@
 {
-    "name": "TelFood",
-    "version": "0.0.1",
+    "name": "Indifood Court",
+    "version": "0.1.3",
     "author": "Indrio Eko Purnomo",
     "homepage": "http://hexa.id/",
     "private": true,
@@ -45,7 +45,7 @@
         "@ionic/app-scripts": "3.2.0",
         "typescript": "~2.6.2"
     },
-    "description": "TelFood",
+    "description": "Indifood Court is a Food Marketplace",
     "cordova": {
         "plugins": {
             "cordova-sqlite-storage": {},

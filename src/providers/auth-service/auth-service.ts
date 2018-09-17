@@ -38,18 +38,18 @@ export class AuthServiceProvider {
           return Observable.create(observer => {
               this.userRef.orderByChild('username').equalTo(credentials.username).once('value', (snap) => {
                   if (snap.val()) {
-                      var tempMerchants = snap.val();
-                      for (var key in tempMerchants) {
-                          if(tempMerchants[key].username == credentials.username && 
-                              tempMerchants[key].password == credentials.password) {
-                                  observer.next(true);
-                                  this.currentUser = new User(
-                                      tempMerchants[key].username, 
-                                      tempMerchants[key].password, 
-                                      tempMerchants[key].user_type,
-                                      tempMerchants[key].merchant_id
-                                  );
+                      var tempUsers = snap.val();
+                      for (var key in tempUsers) {
+                          if(tempUsers[key].username == credentials.username && 
+                              tempUsers[key].password == credentials.password) {
                                   
+                                  this.currentUser = new User(
+                                      tempUsers[key].username, 
+                                      tempUsers[key].password, 
+                                      tempUsers[key].user_type,
+                                      tempUsers[key].merchant_id
+                                  );
+                                  observer.next(true);
                                   observer.complete();
                            } else {
                                observer.next(false);

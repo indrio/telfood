@@ -59,6 +59,8 @@ export class OrderProvider {
               }
               this.events.publish('ordersLoaded');
           });
+      } else if(user.merchant_id != null){
+          
       }
   }
   

@@ -1,9 +1,9 @@
 <ion-header>
   <ion-navbar>
       <div class="titleicon">
-          <img src="../../assets/imgs/logo-white.png" width="100px"/>
+          <img src="assets/imgs/logo-white.png" width="100px"/>
       </div>
-      <ion-buttons end>
+      <ion-buttons end *ngIf="auth.getUserInfo().user_type == 'user'">
           <button ion-button icon-only (click)="cart()">
               <ion-icon name="cart"></ion-icon>
           </button>
@@ -21,7 +21,7 @@
         <ion-row>
             <ion-col col-12 col-sm *ngFor="let merchant of merchants; index as i">
                 <ion-card (click)="merchantMenus($event, merchant)">
-                  <img src="../../assets/imgs/categories/{{merchant.icon}}.png"/>
+                  <img src="{{merchant.icon}}"/>
                   <ion-card-content>
                       <ion-card-title>
                           {{merchant.name}}

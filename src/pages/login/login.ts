@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController, LoadingController, Loading } from 'ionic-angular';
 import { HomePage } from '../home/home';
+import { OrderPage } from '../order/order';
 import { AuthServiceProvider } from '../../providers/auth-service/auth-service';
 
 /**
@@ -31,7 +32,13 @@ export class LoginPage {
         
         this.auth.login(this.registerCredentials).subscribe(allowed => {
             if (allowed) {
-                this.nav.setRoot(HomePage);
+                
+                console.log(this.auth.getUserInfo());
+                
+                if(this.auth.getUserInfo().user_type == 'user')
+                    this.nav.setRoot(HomePage);
+                else if(this.auth.getUserInfo().user_type == 'merchant')
+                    this.nav.setRoot(OrderPage);
             } else {
                 this.showError("Access Denied");
             }

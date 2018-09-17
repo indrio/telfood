@@ -1,10 +1,10 @@
 <ion-header>
   <ion-navbar>
-    <button ion-button menuToggle>
+    <button ion-button menuToggle *ngIf="auth.getUserInfo().user_type == 'user'">
       <ion-icon name="menu" color="dark"></ion-icon>
     </button>
       <div class="titleicon">
-          <img src="../../assets/imgs/logo-white.png" width="100px"/>
+          <img src="assets/imgs/logo-white.png" width="100px"/>
       </div>
   </ion-navbar>
 

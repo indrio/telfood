@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, LoadingController, Events, ToastController } from 'ionic-angular';
+import { AuthServiceProvider } from '../../providers/auth-service/auth-service';
 import { MerchantMenuProvider } from '../../providers/merchant-menu/merchant-menu';
 import { CartProvider } from '../../providers/cart/cart';
 
@@ -21,12 +22,13 @@ export class MerchantsMenusPage {
     menus: Array<{id: string, title: string, description: string, photo: string, price: number}>;
     
     constructor(public nav: NavController, 
-              public navParams: NavParams,
-              private loadingCtrl: LoadingController,
-              private menuService: MerchantMenuProvider,
-              private events: Events,
-              private cartService: CartProvider,
-              public toastCtrl: ToastController) {
+                public navParams: NavParams, 
+                private auth: AuthServiceProvider,
+                private loadingCtrl: LoadingController,
+                private menuService: MerchantMenuProvider,
+                private events: Events,
+                private cartService: CartProvider,
+                public toastCtrl: ToastController) {
                   
         this.selectedMerchant = navParams.get('merchant');
     }

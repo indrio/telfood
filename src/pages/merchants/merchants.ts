@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, LoadingController, Events } from 'ionic-angular';
+import { AuthServiceProvider } from '../../providers/auth-service/auth-service';
 import { MerchantProvider } from '../../providers/merchant/merchant';
 
 /**
@@ -20,10 +21,11 @@ export class MerchantsPage {
     merchants: Array<{id: string, name: string, address: string, open_hour: string, icon: string}>;
     
     constructor(public nav: NavController, 
-              public navParams: NavParams,
-              private loadingCtrl: LoadingController,
-              private merchantService: MerchantProvider,
-              private events: Events) {
+                public navParams: NavParams, 
+                private auth: AuthServiceProvider,
+                private loadingCtrl: LoadingController,
+                private merchantService: MerchantProvider,
+                private events: Events) {
         
         this.selectedCategory = navParams.get('category');
     }
