@@ -25,6 +25,7 @@ export class MerchantMenuProvider {
                 for (var key in tempMenus) {
                     let singleMenu = {
                         id: key,
+                        merchant_id: tempMenus[key].merchant_id,
                         title: tempMenus[key].title,
                         description: tempMenus[key].description,
                         photo: tempMenus[key].photo,

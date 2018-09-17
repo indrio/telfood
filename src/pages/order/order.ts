@@ -18,6 +18,7 @@ export class OrderPage {
     
     orders: Array<{
         order_date:number,
+        merchant_id:string,
         username:string,
         cartItems:Array<{
             id: string, 
@@ -60,7 +61,7 @@ export class OrderPage {
         this.orderService.getOrders(loggedUser);
         
         this.events.subscribe('ordersLoaded', () => {
-            this.orders = this.orderService.orders;
+            this.orders = this.orderService.orders.sort((a, b) => a.order_date <= b.order_date ? 1 : -1);
             loader.dismiss();
         });
     }

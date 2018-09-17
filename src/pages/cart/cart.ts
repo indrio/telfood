@@ -21,6 +21,7 @@ export class CartPage {
     
     order: {
         order_date:number,
+        merchant_id:number,
         username:string,
         cartItems:Array<{
             id: string, 
@@ -48,6 +49,7 @@ export class CartPage {
                   
                   this.order = {
                       order_date: new Date().getTime(),
+                      merchant_id:-1,
                       username: this.auth.getUserInfo().username,
                       cartItems:[],
                       totalPrice:0, 
@@ -56,7 +58,7 @@ export class CartPage {
                       status:'open'
                   };
         
-                  this.getCartItems();
+                  this.getOrders();
         
                   this.sumTotal();
                   
@@ -82,12 +84,12 @@ export class CartPage {
       this.sumTotal();
   }
   
-  getCartItems() {
-      this.cartService.getCartItems().then(result => {
-            if (result) {
-                this.order = result;
-            }
-        });
+  getOrders() {
+      this.cartService.getOrders().then(result => {
+          if (result) {
+              this.order = result;
+          }
+      });
   }
   
   sumTotal() {
@@ -133,7 +135,6 @@ export class CartPage {
   }
   
   public showConfirm(order) {
-      console.log(order);
       const confirm = this.alertCtrl.create({
           title: 'You sure to order ?',
           message: 'Do you sure to order '+order.cartItems.length+' items ?',
@@ -154,11 +155,7 @@ export class CartPage {
   }
   
   public doOrder(order) {
-      console.log(order);
-      
       let loggedUser = this.auth.getUserInfo();
-      
-      console.log(loggedUser);
       
       order.order_date = new Date().getTime();
       order.username = loggedUser.username;

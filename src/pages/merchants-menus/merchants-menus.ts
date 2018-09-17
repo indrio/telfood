@@ -64,24 +64,26 @@ export class MerchantsMenusPage {
     public addToCart(menu) {
         let cartItem = {
             id: menu.id, 
+            merchant_id: menu.merchant_id,
             title: menu.title, 
             description: menu.description, 
             photo: menu.photo, 
             qty : 1, 
             price: menu.price,
-            notes: menu.notes
+            notes: ''
         };
         
         this.cartService.addToCart(cartItem).then((val) => {
-            console.log('val');
-            console.log(val);
-            
-            this.presentToast(menu.title);
+            if(val != null)
+                this.presentToast(`${menu.title} has been added to cart`);
+            else 
+                this.presentToast(`You can't order product from different tenant.`);
         });
     }
-    presentToast(name) {
+    
+    presentToast(message) {
         let toast = this.toastCtrl.create({
-            message: `${name} has been added to cart`,
+            message: message,
             duration: 3000,
             showCloseButton: true,
             closeButtonText: 'Close'
@@ -94,7 +96,6 @@ export class MerchantsMenusPage {
     }
     
     getMenus(merchant) {
-        console.log(merchant);
         let loader = this.loadingCtrl.create({
             content: 'Loading Menu Merchants..'
         });
