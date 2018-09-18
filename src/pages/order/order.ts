@@ -32,8 +32,11 @@ export class OrderPage {
         totalPrice:number, 
         delivery_address:string, 
         delivery_phone:string,
-        status:string
+        status:string,
+        expanded:boolean
     }>;
+    
+    itemExpandHeight: number = 70;
     
     constructor(public navCtrl: NavController, 
               public navParams: NavParams,
@@ -63,6 +66,18 @@ export class OrderPage {
         this.events.subscribe('ordersLoaded', () => {
             this.orders = this.orderService.orders.sort((a, b) => a.order_date <= b.order_date ? 1 : -1);
             loader.dismiss();
+        });
+    }
+ 
+    expandItem(order){
+        this.orders.map((listOrder) => {
+            if(order == listOrder){
+                listOrder.expanded = !listOrder.expanded;
+            } else {
+                listOrder.expanded = false;
+            }
+ 
+            return listOrder;
         });
     }
 

@@ -1,10 +1,11 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { Storage } from '@ionic/storage';
 import 'rxjs/add/operator/map';
 
-import { Events } from 'ionic-angular';
 import firebase from 'firebase';
+
+const USER_KEY = 'loggedUser';
 
 export class User {
   username: string;
@@ -19,6 +20,7 @@ export class User {
     this.merchant_id = merchant_id;
   }
 }
+
 /*
   Generated class for the AuthServiceProvider provider.
 
@@ -31,6 +33,8 @@ export class AuthServiceProvider {
     
     currentUser: User;
     
+    constructor(private storage: Storage) {}
+    
   public login(credentials) {
       if (credentials.username === null || credentials.password === null) {
           return Observable.throw("Please insert credentials");
@@ -39,16 +43,19 @@ export class AuthServiceProvider {
               this.userRef.orderByChild('username').equalTo(credentials.username).once('value', (snap) => {
                   if (snap.val()) {
                       var tempUsers = snap.val();
+                      
                       for (var key in tempUsers) {
                           if(tempUsers[key].username == credentials.username && 
                               tempUsers[key].password == credentials.password) {
-                                  
                                   this.currentUser = new User(
                                       tempUsers[key].username, 
                                       tempUsers[key].password, 
                                       tempUsers[key].user_type,
                                       tempUsers[key].merchant_id
                                   );
+                                  
+                                  //console.log(this.storage.set(USER_KEY, JSON.stringify(this.currentUser)));
+                                      
                                   observer.next(true);
                                   observer.complete();
                            } else {
@@ -60,7 +67,9 @@ export class AuthServiceProvider {
                       observer.next(false);
                       observer.complete();
                   }
-              });
+              }, function(error) {
+                  console.error(error);
+            });
           });
       }
   }
@@ -84,12 +93,22 @@ export class AuthServiceProvider {
   }
   
   public getUserInfo() : User {
+      /*
+      this.storage.get(USER_KEY).then(result => {
+          if (result) {
+              this.currentUser = JSON.parse(result);
+          }
+      });
+      */
+      
       return this.currentUser;
   }
   
   public logout() {
       return Observable.create(observer => {
           this.currentUser = null;
+          //this.storage.remove(USER_KEY);
+          
           observer.next(true);
           observer.complete();
       });

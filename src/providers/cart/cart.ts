@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { Events } from 'ionic-angular';
@@ -19,7 +18,7 @@ export class CartProvider {
     
     addToCart(product) {
         return this.getOrders().then(result => {
-            if(result.merchant_id != product.merchant_id) {
+            if(result && (result.merchant_id != product.merchant_id)) {
                 return null;
             }
             

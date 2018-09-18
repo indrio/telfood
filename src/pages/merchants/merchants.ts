@@ -22,10 +22,10 @@ export class MerchantsPage {
     
     constructor(public nav: NavController, 
                 public navParams: NavParams, 
-                private auth: AuthServiceProvider,
                 private loadingCtrl: LoadingController,
                 private merchantService: MerchantProvider,
-                private events: Events) {
+                private events: Events,
+                private auth: AuthServiceProvider ) {
         
         this.selectedCategory = navParams.get('category');
     }

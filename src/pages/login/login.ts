@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController, LoadingController, Loading } from 'ionic-angular';
+import { IonicPage, NavController, AlertController, LoadingController, Loading } from 'ionic-angular';
 import { HomePage } from '../home/home';
 import { OrderPage } from '../order/order';
 import { AuthServiceProvider } from '../../providers/auth-service/auth-service';
@@ -20,7 +20,18 @@ export class LoginPage {
     loading: Loading;
     registerCredentials = { username: '', password: '' };
     
-    constructor(private nav: NavController, private auth: AuthServiceProvider, private alertCtrl: AlertController, private loadingCtrl: LoadingController) {
+    constructor(private nav: NavController, 
+                private auth: AuthServiceProvider, 
+                private alertCtrl: AlertController, 
+                private loadingCtrl: LoadingController) {}
+    
+    ionViewWillEnter() {
+        if(this.auth.getUserInfo()) {
+            if(this.auth.getUserInfo().user_type == 'user')
+                this.nav.setRoot(HomePage);
+            else if(this.auth.getUserInfo().user_type == 'merchant')
+                this.nav.setRoot(OrderPage);
+        }
     }
     
     public createAccount() {
@@ -32,9 +43,6 @@ export class LoginPage {
         
         this.auth.login(this.registerCredentials).subscribe(allowed => {
             if (allowed) {
-                
-                console.log(this.auth.getUserInfo());
-                
                 if(this.auth.getUserInfo().user_type == 'user')
                     this.nav.setRoot(HomePage);
                 else if(this.auth.getUserInfo().user_type == 'merchant')

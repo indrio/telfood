@@ -17,22 +17,31 @@
 <ion-content padding>
     <ion-list>
         <ion-item *ngFor="let order of orders; index as i">
-            <h2>{{order.order_date | date : "dd/MM/y HH:mm:ss"}}</h2>
+            <h3>{{order.order_date | date : "dd/MM/y HH:mm:ss"}}</h3>
             <p *ngFor="let item of order.cartItems;">
                 {{item.title}} x {{item.qty}}
                 <br/><i>{{item.notes}}</i>
             </p>
             <p>
                 <ion-badge item-end *ngIf="order.status == 'open'" color="primary">
-                    Open
+                    Opened Order
                 </ion-badge>
                 <ion-badge item-end *ngIf="order.status == 'close'" color="danger">
-                    Close
+                    Closed Order
                 </ion-badge>
+                <button clear (click)="expandItem(order)" *ngIf="auth.getUserInfo().user_type == 'merchant'">Detail</button>
             </p>
             <ion-note item-end>
                 {{order.totalPrice | number:0}}
             </ion-note>
+            <expandable [expandHeight]="itemExpandHeight" [expanded]="order.expanded"  *ngIf="auth.getUserInfo().user_type == 'merchant'">
+                <h3>Deliver to</h3>
+                <p>
+                    Username : {{order.username}}<br/>
+                    Address : {{order.delivery_address}}<br/>
+                    Phone : {{order.delivery_phone}}<br/>
+                </p>
+            </expandable>
         </ion-item>
     </ion-list>
 </ion-content>

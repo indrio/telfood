@@ -18,6 +18,10 @@ import { OrderProvider } from '../providers/order/order';
 
 import { IonicStorageModule } from '@ionic/storage';
 
+import { FCM } from '@ionic-native/fcm';
+import { HttpClientModule } from '@angular/common/http';
+import { ExpandableComponent } from '../components/expandable/expandable';
+
 import { config } from './../config/app.config';
 import * as firebase from 'firebase';
 
@@ -28,10 +32,12 @@ firebase.initializeApp(config.firebasConfig);
     MyApp,
     HomePage,
     OrderPage,
-    ListPage
+    ListPage, 
+    ExpandableComponent
   ],
   imports: [
     BrowserModule,
+    HttpClientModule,
     IonicModule.forRoot(MyApp),
     IonicStorageModule.forRoot()
   ],
@@ -51,7 +57,8 @@ firebase.initializeApp(config.firebasConfig);
     MerchantProvider,
     CategoryProvider,
     CartProvider,
-    OrderProvider
+    OrderProvider,
+    FCM
   ]
 })
 export class AppModule {}

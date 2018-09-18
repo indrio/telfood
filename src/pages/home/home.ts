@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, LoadingController, Events } from 'ionic-angular';
+import { NavController, LoadingController, Events } from 'ionic-angular';
 import { AuthServiceProvider } from '../../providers/auth-service/auth-service';
 import { CategoryProvider } from '../../providers/category/category';
 
@@ -12,7 +12,6 @@ export class HomePage {
     categories: Array<{id: string, title: string, icon: string}>;
     
     constructor(private nav: NavController, 
-                private navParams: NavParams, 
                 private auth: AuthServiceProvider,
                 private loadingCtrl: LoadingController,
                 private categoryService: CategoryProvider,

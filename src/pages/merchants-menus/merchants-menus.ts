@@ -23,12 +23,12 @@ export class MerchantsMenusPage {
     
     constructor(public nav: NavController, 
                 public navParams: NavParams, 
-                private auth: AuthServiceProvider,
                 private loadingCtrl: LoadingController,
                 private menuService: MerchantMenuProvider,
                 private events: Events,
                 private cartService: CartProvider,
-                public toastCtrl: ToastController) {
+                public toastCtrl: ToastController,
+                private auth: AuthServiceProvider) {
                   
         this.selectedMerchant = navParams.get('merchant');
     }
