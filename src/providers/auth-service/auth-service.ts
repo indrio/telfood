@@ -4,6 +4,10 @@ import 'rxjs/add/operator/map';
 
 import firebase from 'firebase';
 
+import { Storage } from '@ionic/storage';
+
+const USER_KEY = 'loggedUser';
+
 export class User {
   username: string;
   password: string;
@@ -30,7 +34,7 @@ export class AuthServiceProvider {
     
     currentUser: User;
     
-    constructor() {}
+    constructor(public storage: Storage) {}
     
   public login(credentials) {
       if (credentials.username === null || credentials.password === null) {
@@ -106,12 +110,7 @@ export class AuthServiceProvider {
   }
   
   public logout() {
-      return Observable.create(observer => {
-          this.currentUser = null;
-          
-          observer.next(true);
-          observer.complete();
-      });
+      return this.storage.remove(USER_KEY)
   }
 
 }

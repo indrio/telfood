@@ -53,6 +53,8 @@ export class MyApp {
   
   logout() {
       console.log('logout');
-      this.auth.logout();
+      this.auth.logout().then(result => {
+          this.nav.setRoot('LoginPage');
+      });
   }
 }

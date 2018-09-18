@@ -38,8 +38,6 @@ export class OrderProvider {
 
   
   getOrders(user) {
-      console.log(user);
-      
       if(user && user.user_type == 'user') {
           this.orderRef.orderByChild('username').equalTo(user.username).once('value', (snap) => {
               this.orders = [];

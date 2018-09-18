@@ -32,9 +32,10 @@ export class LoginPage {
     
     ionViewWillEnter() {
         this.isUserLogged().then(result => {
+            console.log(result);
+            
             if(result) {
                 let user = JSON.parse(result);
-                console.log(user);
                 
                 this.auth.setUserInfo(user);
                 
