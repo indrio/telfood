@@ -1,8 +1,11 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, AlertController, LoadingController, Loading } from 'ionic-angular';
+import { IonicPage, Platform, NavController, AlertController, LoadingController, Loading } from 'ionic-angular';
 import { HomePage } from '../home/home';
 import { OrderPage } from '../order/order';
 import { AuthServiceProvider } from '../../providers/auth-service/auth-service';
+import { Storage } from '@ionic/storage';
+
+const USER_KEY = 'loggedUser';
 
 /**
  * Generated class for the LoginPage page.
@@ -20,18 +23,27 @@ export class LoginPage {
     loading: Loading;
     registerCredentials = { username: '', password: '' };
     
-    constructor(private nav: NavController, 
+    constructor(public platform: Platform,
+                private nav: NavController, 
                 private auth: AuthServiceProvider, 
                 private alertCtrl: AlertController, 
-                private loadingCtrl: LoadingController) {}
+                private loadingCtrl: LoadingController,
+                public storage: Storage) {}
     
     ionViewWillEnter() {
-        if(this.auth.getUserInfo()) {
-            if(this.auth.getUserInfo().user_type == 'user')
-                this.nav.setRoot(HomePage);
-            else if(this.auth.getUserInfo().user_type == 'merchant')
-                this.nav.setRoot(OrderPage);
-        }
+        this.isUserLogged().then(result => {
+            if(result) {
+                let user = JSON.parse(result);
+                console.log(user);
+                
+                this.auth.setUserInfo(user);
+                
+                if(user.user_type == 'user')
+                    this.nav.setRoot(HomePage);
+                else if(user.user_type == 'merchant')
+                    this.nav.setRoot(OrderPage);
+            }
+        });
     }
     
     public createAccount() {
@@ -43,10 +55,14 @@ export class LoginPage {
         
         this.auth.login(this.registerCredentials).subscribe(allowed => {
             if (allowed) {
-                if(this.auth.getUserInfo().user_type == 'user')
+                this.storage.set(USER_KEY, JSON.stringify(this.auth.getUserInfo()));
+                
+                if(this.auth.getUserInfo().user_type == 'user') {
                     this.nav.setRoot(HomePage);
-                else if(this.auth.getUserInfo().user_type == 'merchant')
+                }
+                else if(this.auth.getUserInfo().user_type == 'merchant') {
                     this.nav.setRoot(OrderPage);
+                }
             } else {
                 this.showError("Access Denied");
             }
@@ -74,4 +90,9 @@ export class LoginPage {
         });
         alert.present();
     }
+    
+    isUserLogged() {
+        return this.storage.get(USER_KEY);
+    }
+    
 }

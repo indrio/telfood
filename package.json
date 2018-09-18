@@ -28,9 +28,7 @@
         "@ionic/pro": "2.0.3",
         "@ionic/storage": "^2.2.0",
         "cordova-android": "^6.2.3",
-        "cordova-browser": "^4.1.0",
         "cordova-plugin-device": "^2.0.2",
-        "cordova-plugin-fcm": "^2.1.2",
         "cordova-plugin-ionic-keyboard": "^2.1.2",
         "cordova-plugin-ionic-webview": "^2.1.4",
         "cordova-plugin-splashscreen": "^5.0.2",
@@ -57,12 +55,10 @@
             "cordova-plugin-ionic-webview": {},
             "cordova-plugin-splashscreen": {},
             "cordova-plugin-statusbar": {},
-            "cordova-plugin-whitelist": {},
-            "cordova-plugin-fcm": {}
+            "cordova-plugin-whitelist": {}
         },
         "platforms": [
-            "android",
-            "browser"
+            "android"
         ]
     }
 }

@@ -30,7 +30,8 @@ export class OrderProvider {
         totalPrice:number, 
         delivery_address:string, 
         delivery_phone:string,
-        status:string
+        status:string,
+        expanded:boolean
     }>;
 
   constructor(public events: Events) { }
@@ -55,7 +56,8 @@ export class OrderProvider {
                           totalPrice: tempOrders[key].totalPrice,
                           delivery_address: tempOrders[key].delivery_address,
                           delivery_phone: tempOrders[key].delivery_phone,
-                          status: tempOrders[key].status
+                          status: tempOrders[key].status,
+                          expanded:false
                       };
                   
                       this.orders.push(singleOrder);
@@ -79,7 +81,8 @@ export class OrderProvider {
                           totalPrice: tempOrders[key].totalPrice,
                           delivery_address: tempOrders[key].delivery_address,
                           delivery_phone: tempOrders[key].delivery_phone,
-                          status: tempOrders[key].status
+                          status: tempOrders[key].status,
+                          expanded:false
                       };
                   
                       this.orders.push(singleOrder);

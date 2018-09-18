@@ -1,11 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { Storage } from '@ionic/storage';
 import 'rxjs/add/operator/map';
 
 import firebase from 'firebase';
-
-const USER_KEY = 'loggedUser';
 
 export class User {
   username: string;
@@ -33,7 +30,7 @@ export class AuthServiceProvider {
     
     currentUser: User;
     
-    constructor(private storage: Storage) {}
+    constructor() {}
     
   public login(credentials) {
       if (credentials.username === null || credentials.password === null) {
@@ -53,8 +50,6 @@ export class AuthServiceProvider {
                                       tempUsers[key].user_type,
                                       tempUsers[key].merchant_id
                                   );
-                                  
-                                  //console.log(this.storage.set(USER_KEY, JSON.stringify(this.currentUser)));
                                       
                                   observer.next(true);
                                   observer.complete();
@@ -72,6 +67,16 @@ export class AuthServiceProvider {
             });
           });
       }
+  }
+  
+  public updateToken(username, token) {
+      this.userRef.child(username).child('google_token').set(token)
+      .then(function() {
+          console.log('Synchronization succeeded');
+      })
+      .catch(function(error) {
+          console.log('Synchronization failed');
+      }); 
   }
   
   public register(credentials) {
@@ -93,21 +98,16 @@ export class AuthServiceProvider {
   }
   
   public getUserInfo() : User {
-      /*
-      this.storage.get(USER_KEY).then(result => {
-          if (result) {
-              this.currentUser = JSON.parse(result);
-          }
-      });
-      */
-      
       return this.currentUser;
+  }
+  
+  public setUserInfo(loggedUser) {
+      this.currentUser = loggedUser;
   }
   
   public logout() {
       return Observable.create(observer => {
           this.currentUser = null;
-          //this.storage.remove(USER_KEY);
           
           observer.next(true);
           observer.complete();
