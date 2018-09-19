@@ -1,8 +1,9 @@
-//import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { Events } from 'ionic-angular';
-import firebase from 'firebase';
+
+import firebase from 'firebase/app';
+import 'firebase/database';
 
 /*
   Generated class for the MerchantProvider provider.

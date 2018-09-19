@@ -22,7 +22,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { ExpandableComponent } from '../components/expandable/expandable';
 
 import { config } from './../config/app.config';
-import * as firebase from 'firebase';
+
+import firebase from 'firebase/app';
 
 firebase.initializeApp(config.firebasConfig);
 

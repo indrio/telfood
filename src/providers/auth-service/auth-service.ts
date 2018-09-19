@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 
-import firebase from 'firebase';
+import firebase from 'firebase/app';
+import 'firebase/database';
 
 import { Storage } from '@ionic/storage';
 
