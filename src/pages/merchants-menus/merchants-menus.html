@@ -46,7 +46,7 @@
         <h2>{{menu.title}}</h2>
         <p>{{menu.description}}</p>
         <br/>
-        <h2>Rp.{{menu.price}}</h2>
+        <h2>Rp.{{menu.price | number:0}}</h2>
         <button ion-button clear item-end 
                 *ngIf="checkShopStatus(selectedMerchant.open_hour)" 
                 (click)="addToCart(menu)">

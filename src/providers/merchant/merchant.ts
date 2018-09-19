@@ -17,25 +17,48 @@ export class MerchantProvider {
     
     constructor(public events: Events) {}
     
-    getMerchants(category) {
-        this.merchantRef.orderByChild('category').equalTo(category.id).once('value', (snap) => {
-            this.merchants = [];
-            if (snap.val()) {
-                var tempMerchants = snap.val();
-                for (var key in tempMerchants) {
-                    let singleMerchant = {
-                        id: key,
-                        name: tempMerchants[key].name,
-                        address: tempMerchants[key].address,
-                        open_hour: tempMerchants[key].open_hour,
-                        icon: tempMerchants[key].icon
-                    };
+    getMerchants(category = null) {
+        console.log('cat : '+category);
+        if(category) {
+            this.merchantRef.orderByChild('category').equalTo(category.id).once('value', (snap) => {
+                this.merchants = [];
+                if (snap.val()) {
+                    var tempMerchants = snap.val();
+                    for (var key in tempMerchants) {
+                        let singleMerchant = {
+                            id: key,
+                            name: tempMerchants[key].name,
+                            address: tempMerchants[key].address,
+                            open_hour: tempMerchants[key].open_hour,
+                            icon: tempMerchants[key].icon
+                        };
                     
-                    this.merchants.push(singleMerchant);
+                        this.merchants.push(singleMerchant);
+                    }
                 }
-            }
-            this.events.publish('merchantsLoaded');
-        });
+                this.events.publish('merchantsLoaded');
+            });
+        } else {
+            console.log('no cat');
+            this.merchantRef.once('value', (snap) => {
+                this.merchants = [];
+                if (snap.val()) {
+                    var tempMerchants = snap.val();
+                    for (var key in tempMerchants) {
+                        let singleMerchant = {
+                            id: key,
+                            name: tempMerchants[key].name,
+                            address: tempMerchants[key].address,
+                            open_hour: tempMerchants[key].open_hour,
+                            icon: tempMerchants[key].icon
+                        };
+                    
+                        this.merchants.push(singleMerchant);
+                    }
+                }
+                this.events.publish('merchantsLoaded');
+            });
+        }
     }
 
 }

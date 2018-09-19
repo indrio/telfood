@@ -1,4 +1,15 @@
 page-home {
+    /*
+    .home-content {
+        background-image: url('../assets/imgs/background-sized.png');
+        background-repeat: no-repeat;
+        background-size:cover;
+    }
+    */
+    .searchbar-input {
+        padding-left: 43px !important;
+    }
+    
     .toolbar-background {
         background-color:#F20A0A;
     }
@@ -42,5 +53,9 @@ page-home {
         color: #fff;
       }
 
+    }
+    
+    ion-card img {
+        height: 100px;
     }
 }

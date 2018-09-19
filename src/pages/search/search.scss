@@ -1,4 +1,12 @@
-page-merchants-menus {
+page-search {
+    .searchbar-input {
+        padding-left: 43px !important;
+    }
+    .spinner-container {
+        width: 100%;
+        text-align: center;
+        padding: 10px;
+    }
     .toolbar-background {
         background-color:#F20A0A;
     }
@@ -61,7 +69,8 @@ page-merchants-menus {
     }
     }
     ion-thumbnail img {
-        background-image:url('https://firebasestorage.googleapis.com/v0/b/telfood-81ef2.appspot.com/o/default-image-thumb.jpeg?alt=media&token=0027925a-acc7-4df7-a5bd-90711c2ed581');
+        background-image:url('../assets/imgs/default-thumb.jpg');
         width:80px;
     }
+
 }

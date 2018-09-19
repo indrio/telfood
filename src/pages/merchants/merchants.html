@@ -29,7 +29,7 @@
                       {{merchant.address}}
                   </ion-card-content>
                   <ion-row>
-                      <ion-col></ion-col>
+                      <ion-col>{{merchant.open_hour}}</ion-col>
                       <ion-col center text-right>
                           <ion-badge item-end *ngIf="checkShopStatus(merchant.open_hour)" color="primary">
                               Open

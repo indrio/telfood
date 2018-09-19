@@ -35,7 +35,7 @@ export class MerchantsPage {
     }
     
     ionViewDidLeave() {
-        this.events.unsubscribe('categoriesLoaded');
+        this.events.unsubscribe('merchantsLoaded');
     }
     
     public merchantMenus(event, merchant) {
