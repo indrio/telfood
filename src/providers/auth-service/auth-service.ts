@@ -110,7 +110,6 @@ export class AuthServiceProvider {
   }
   
   public logout() {
-      this.currentUser = null;
       return this.storage.remove(USER_KEY)
   }
 
