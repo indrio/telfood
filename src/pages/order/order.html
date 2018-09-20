@@ -1,6 +1,6 @@
 <ion-header>
   <ion-navbar>
-    <button ion-button menuToggle *ngIf="auth.getUserInfo().user_type == 'user'">
+    <button ion-button menuToggle>
       <ion-icon name="menu" color="dark"></ion-icon>
     </button>
       <div class="titleicon">
@@ -17,19 +17,25 @@
 <ion-content padding>
     <ion-list>
         <ion-item *ngFor="let order of orders; index as i">
-            <h3>{{order.order_date | date : "dd/MM/y HH:mm:ss"}}</h3>
-            <p *ngFor="let item of order.cartItems;">
-                {{item.title}} x {{item.qty}}
-                <br/><i>{{item.notes}}</i>
-            </p>
+            <h2>{{getMerchant(order.merchant_id)?.name}}</h2>
+            <hr/>
+            <p><i>{{order.order_date | date : "dd/MM/y HH:mm:ss"}}</i></p>
+            <ul>
+              <li *ngFor="let item of order.cartItems;">
+                  {{item.title}} x {{item.qty}}
+                  <br/><i>{{item.notes}}</i>
+              </li>
+            </ul>
             <p>
+                <!--
                 <ion-badge item-end *ngIf="order.status == 'open'" color="primary">
                     Opened Order
                 </ion-badge>
                 <ion-badge item-end *ngIf="order.status == 'close'" color="danger">
                     Closed Order
                 </ion-badge>
-                <button clear (click)="expandItem(order)" *ngIf="auth.getUserInfo().user_type == 'merchant'">Detail</button>
+                -->
+                <button ion-button clear (click)="expandItem(order)" *ngIf="auth.getUserInfo().user_type == 'merchant'">Detail</button>
             </p>
             <ion-note item-end>
                 {{order.totalPrice | number:0}}

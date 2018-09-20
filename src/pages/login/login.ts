@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
-import { IonicPage, Platform, NavController, AlertController, LoadingController, Loading } from 'ionic-angular';
+import { IonicPage, Platform, NavController, AlertController, LoadingController, Loading, Events } from 'ionic-angular';
 import { HomePage } from '../home/home';
 import { OrderPage } from '../order/order';
 import { AuthServiceProvider } from '../../providers/auth-service/auth-service';
 import { Storage } from '@ionic/storage';
+
+import { FCM } from '@ionic-native/fcm';
 
 const USER_KEY = 'loggedUser';
 
@@ -28,9 +30,13 @@ export class LoginPage {
                 private auth: AuthServiceProvider, 
                 private alertCtrl: AlertController, 
                 private loadingCtrl: LoadingController,
-                public storage: Storage) {}
+                public storage: Storage,
+                private fcm: FCM,
+                private events: Events) {}
     
     ionViewWillEnter() {
+        this.fcm.subscribeToTopic('marketing');
+        
         this.isUserLogged().then(result => {
             console.log(result);
             
@@ -38,6 +44,8 @@ export class LoginPage {
                 let user = JSON.parse(result);
                 
                 this.auth.setUserInfo(user);
+
+                this.events.publish('userLogged');
                 
                 if(user.user_type == 'user')
                     this.nav.setRoot(HomePage);
@@ -62,6 +70,24 @@ export class LoginPage {
                     this.nav.setRoot(HomePage);
                 }
                 else if(this.auth.getUserInfo().user_type == 'merchant') {
+                    if(this.platform.is('cordova')) {
+                        this.fcm.getToken().then(token => {
+                            console.log('token : '+token);
+                        
+                            this.auth.updateToken(token);
+                        });
+                    
+                        this.fcm.onNotification().subscribe(data => {
+                            if(data.wasTapped){
+                                console.log("Received in background");
+                                console.log(data);
+                            } else {
+                                console.log("Received in foreground");
+                                console.log(data);
+                            };
+                        });
+                      }
+                    
                     this.nav.setRoot(OrderPage);
                 }
             } else {

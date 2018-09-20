@@ -25,6 +25,8 @@ import { config } from './../config/app.config';
 
 import firebase from 'firebase/app';
 
+import {FCM} from '@ionic-native/fcm'
+
 firebase.initializeApp(config.firebasConfig);
 
 @NgModule({
@@ -57,7 +59,8 @@ firebase.initializeApp(config.firebasConfig);
     MerchantProvider,
     CategoryProvider,
     CartProvider,
-    OrderProvider
+    OrderProvider,
+    FCM
   ]
 })
 export class AppModule {}

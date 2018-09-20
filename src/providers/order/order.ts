@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http/';
+import { HttpHeaders } from '@angular/common/http';
 
 import { Events } from 'ionic-angular';
 
 import firebase from 'firebase/app';
 import 'firebase/database';
-
 
 /*
   Generated class for the OrderProvider provider.
@@ -15,6 +16,8 @@ import 'firebase/database';
 @Injectable()
 export class OrderProvider {
     orderRef = firebase.database().ref("order");
+    userRef = firebase.database().ref("user");
+    merchantRef = firebase.database().ref("merchant");
     
     orders: Array<{
         order_date:number,
@@ -36,7 +39,8 @@ export class OrderProvider {
         expanded:boolean
     }>;
 
-  constructor(public events: Events) { }
+  constructor(public events: Events,
+              private http: HttpClient) { }
 
   
   getOrders(user) {
@@ -94,12 +98,23 @@ export class OrderProvider {
   }
   
   submitOrder(order) {
-      this.orderRef.push(order)
-      .then(function() {
-          console.log('Synchronization succeeded');
-      });
+      console.log('order');
+      console.log(order);
       
-      //this.events.publish('orderSubmited');
+      this.userRef.orderByChild('merchant_id').equalTo(order.merchant_id).once('value', (snap) => {
+          if (snap.val()) {
+              console.log(snap.val());
+              
+              this.orderRef.push(order).then(function() {
+                  console.log('Synchronization succeeded');
+              });
+          }
+
+          var orderMerchants = snap.val();
+          
+          this.sendNotification(orderMerchants[1], order);
+          this.events.publish('orderSubmited');
+      });
   }
   
   setStatus(order_id, status) {
@@ -114,4 +129,26 @@ export class OrderProvider {
       this.events.publish('statusOrderupdated');
   }
   
+  sendNotification(merchantUser, order) {  
+      let body = {
+          notification:{
+              title: "New Order",
+              body: "You have new order from "+order.username,
+              sound: "default",
+              click_action: "FCM_PLUGIN_ACTIVITY",
+              icon: "fcm_push_icon"
+          },
+            to: merchantUser.google_token,
+            priority: "high",
+            restricted_package_name: ""
+        }
+        
+        console.log('body');
+        console.log(body);
+        
+        let options = new HttpHeaders().set('Content-Type','application/json');
+        this.http.post("https://fcm.googleapis.com/fcm/send",body,{
+            headers: options.set('Authorization', 'key=AIzaSyB_Uri3TyhXANQlt75nWujMByipC1yigi0'),
+        }).subscribe();
+  }
 }

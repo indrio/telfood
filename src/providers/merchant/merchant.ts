@@ -19,7 +19,6 @@ export class MerchantProvider {
     constructor(public events: Events) {}
     
     getMerchants(category = null) {
-        console.log('cat : '+category);
         if(category) {
             this.merchantRef.orderByChild('category').equalTo(category.id).once('value', (snap) => {
                 this.merchants = [];
@@ -40,7 +39,6 @@ export class MerchantProvider {
                 this.events.publish('merchantsLoaded');
             });
         } else {
-            console.log('no cat');
             this.merchantRef.once('value', (snap) => {
                 this.merchants = [];
                 if (snap.val()) {

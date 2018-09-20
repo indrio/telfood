@@ -1,8 +1,8 @@
 {
   "name": "Indifood Court",
-  "app_id": "dc483181",
-  "type": "ionic-angular",
   "integrations": {
     "cordova": {}
-  }
+  },
+  "type": "ionic-angular",
+  "pro_id": "dc483181"
 }

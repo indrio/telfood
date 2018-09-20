@@ -23,6 +23,13 @@ export class CartProvider {
             }
             
             if (result && result.cartItems) {
+                console.log('product');
+                console.log(product);
+                console.log('result.cartItems');
+                console.log(result.cartItems);
+                
+                console.log('is contains : '+this.containsObject(product, result.cartItems));
+                
                 if (!this.containsObject(product, result.cartItems)) {
                     result.cartItems.push(product);
                     

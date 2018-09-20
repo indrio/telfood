@@ -46,8 +46,9 @@ export class MerchantMenuProvider {
     
     async searchMenu(searchTerm) {
         console.log(searchTerm);
+        this.menus = [];
+        
         if(!searchTerm) {
-            this.menus = [];
             this.events.publish('menusSearchLoaded');
             return;
         }
@@ -60,18 +61,54 @@ export class MerchantMenuProvider {
                     console.log(snap);
                     if (snap.val()) {
                         var tempMenus = snap.val();
+                        var parseMenus = [];
+
+                        for (var key in tempMenus) {
+                            let singleMenu = {
+                                id: key,
+                                merchant_id: tempMenus[key].merchant_id,
+                                title: tempMenus[key].title,
+                                description: tempMenus[key].description,
+                                photo: tempMenus[key].photo,
+                                price: tempMenus[key].price
+                            };
+                            
+                            if(singleMenu.title.search(new RegExp(searchTerm,"i")) > -1) {
+                                this.menus.push(singleMenu);
+                            }
+                    
+                            parseMenus.push(singleMenu);
+                        }
+                        
                         this.storage.set(MENU_KEY, {
                             'timestamp': new Date().getTime(),
-                            'menus': JSON.stringify(tempMenus)
+                            'menus': JSON.stringify(parseMenus)
                         });
                     }
 
                     this.events.publish('menusSearchLoaded');
                 });
-            } else {
-                this.menus = JSON.parse(result.menus).filter((item) => {
+            }
+             else {
+                console.log('result.menus');
+                console.log(result.menus);
+                
+                var tempMenus = JSON.parse(result.menus).filter((item) => {
                     return item.title.search(new RegExp(searchTerm,"i")) > -1;
                 });
+
+                for (var key in tempMenus) {
+                    let singleMenu = {
+                        id: key,
+                        merchant_id: tempMenus[key].merchant_id,
+                        title: tempMenus[key].title,
+                        description: tempMenus[key].description,
+                        photo: tempMenus[key].photo,
+                        price: tempMenus[key].price
+                    };
+            
+                    this.menus.push(singleMenu);
+                }
                 
                 console.log('this.menus');
                 console.log(this.menus);

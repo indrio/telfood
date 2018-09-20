@@ -3,6 +3,8 @@ import { NavController, NavParams, LoadingController, Events } from 'ionic-angul
 import { OrderProvider } from '../../providers/order/order';
 import { AuthServiceProvider } from '../../providers/auth-service/auth-service';
 
+import { MerchantProvider } from '../../providers/merchant/merchant';
+
 /**
  * Generated class for the OrderPage page.
  *
@@ -36,6 +38,8 @@ export class OrderPage {
         expanded:boolean
     }>;
     
+    merchants: Array<{id: string, name: string, address: string, open_hour: string, icon: string}> = [];
+    
     itemExpandHeight: number = 70;
     
     constructor(public navCtrl: NavController, 
@@ -43,7 +47,8 @@ export class OrderPage {
               private loadingCtrl: LoadingController,
               private orderService: OrderProvider,
               private events: Events, 
-              private auth: AuthServiceProvider) {
+              private auth: AuthServiceProvider, 
+              private merchantService: MerchantProvider) {
     }
     
     ionViewWillEnter() {
@@ -51,10 +56,10 @@ export class OrderPage {
     }
     
     ionViewDidLeave() {
-        this.events.unsubscribe('ordersLoaded');
+        //this.events.unsubscribe('ordersLoaded');
     }
     
-    getOrders(loggedUser) {
+    async getOrders(loggedUser) {
         let loader = this.loadingCtrl.create({
             content: 'Loading Orders..'
         });
@@ -65,7 +70,31 @@ export class OrderPage {
         
         this.events.subscribe('ordersLoaded', () => {
             this.orders = this.orderService.orders.sort((a, b) => a.order_date <= b.order_date ? 1 : -1);
+
+            this.getMerchants();
+            
             loader.dismiss();
+        });
+    }
+    
+    async getMerchants(){
+        if(!this.merchantService.merchants) {
+            this.merchantService.getMerchants();
+        
+            this.events.subscribe('merchantsLoaded', () => {
+                this.merchants = this.merchantService.merchants;
+            });
+        } else {
+            this.merchants = this.merchantService.merchants;
+        }
+    }
+    
+    getMerchant(id) {
+        //console.log('id : '+id);
+        //console.log(this.merchants);
+        
+        return this.merchants.find((item) => {
+            return item.id == id;
         });
     }
  

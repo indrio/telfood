@@ -61,7 +61,6 @@ export class CartPage {
                   this.getOrders();
         
                   this.sumTotal();
-                  
     }
     
     ionViewDidLeave() {
@@ -94,7 +93,7 @@ export class CartPage {
   
   sumTotal() {
       var total = 0;
-
+      
       for(var i = 0; i < this.order.cartItems.length; i++){
           var item = this.order.cartItems[i];
           total += (item.price * item.qty);
@@ -170,12 +169,14 @@ export class CartPage {
       
       this.orderService.submitOrder(order);
       
+      /*
+      
       this.cartService.removeAllCartItems();
 
       this.nav.setRoot(HomePage);
       
       loader.dismiss();
-      /*
+      */
       this.events.subscribe('orderSubmited', () => {
           this.cartService.removeAllCartItems();
 
@@ -183,7 +184,6 @@ export class CartPage {
           
           loader.dismiss();
       });
-      */
       
   }
 

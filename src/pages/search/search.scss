@@ -1,7 +1,4 @@
 page-search {
-    .searchbar-input {
-        padding-left: 43px !important;
-    }
     .spinner-container {
         width: 100%;
         text-align: center;
@@ -24,6 +21,14 @@ page-search {
         left: 25%;
         bottom: 0;
         text-align:center;
+    }
+    
+    .searchbar-input {
+        border-radius: 30px !important;
+        padding-left: 43px !important;
+        border: 1px solid #ffffff;
+        border-bottom: 0px !important;
+        box-shadow: none !important;
     }
     
     .card-background-page {

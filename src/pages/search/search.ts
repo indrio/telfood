@@ -86,6 +86,9 @@ export class SearchPage {
         this.menuService.searchMenu(searchTerm);
         
         this.events.subscribe('menusSearchLoaded', () => {
+            console.log('menusSearchLoaded');
+            console.log(this.menuService.menus);
+            
             this.menus = this.menuService.menus;
             this.searching = false;
         });

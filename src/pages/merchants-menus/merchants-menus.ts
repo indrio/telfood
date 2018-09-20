@@ -105,6 +105,9 @@ export class MerchantsMenusPage {
         this.menuService.getMenus(merchant);
         
         this.events.subscribe('menusLoaded', () => {
+            console.log('menusLoaded');
+            console.log(this.menuService.menus);
+            
             this.menus = this.menuService.menus;
             loader.dismiss();
         });

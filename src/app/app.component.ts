@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { Nav, Platform } from 'ionic-angular';
+import { Nav, Platform, Events } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
@@ -15,17 +15,19 @@ export class MyApp {
 
   rootPage: any = 'LoginPage';
 
-  pages: Array<{title: string, component: any}>;
+  pages: Array<{title: string, component: any}> = [];
   merchantPages: Array<{title: string, component: any}>;
   
   constructor(public platform: Platform, 
               public statusBar: StatusBar, 
               public splashScreen: SplashScreen, 
-              private auth: AuthServiceProvider) {
+              private auth: AuthServiceProvider,
+              private events: Events) {
                   
     this.initializeApp();
 
     // used for an example of ngFor and navigation
+    /*
     this.pages = [
         { title: 'Home', component: HomePage },
         { title: 'Orders', component: OrderPage }
@@ -33,12 +35,24 @@ export class MyApp {
     this.merchantPages = [
         { title: 'Orders', component: OrderPage }
     ];
+    */
   }
 
   initializeApp() {
     this.platform.ready().then(() => {
         // Okay, so the platform is ready and our plugins are available.
         // Here you can do any higher level native things you might need.
+        
+        this.events.subscribe('userLogged', () => {
+            if(this.auth.getUserInfo().user_type == 'merchant') {
+                this.pages = [];   
+            } else {
+                this.pages = [
+                    { title: 'Home', component: HomePage },
+                    { title: 'Orders', component: OrderPage }
+                ];
+            }
+        });
         
         this.statusBar.styleDefault();
         this.splashScreen.hide();
