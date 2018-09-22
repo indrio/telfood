@@ -44,6 +44,8 @@ export class OrderProvider {
 
   
   getOrders(user) {
+      console.log('user');
+      console.log(user);
       if(user && user.user_type == 'user') {
           this.orderRef.orderByChild('username').equalTo(user.username).once('value', (snap) => {
               this.orders = [];
@@ -101,7 +103,7 @@ export class OrderProvider {
       console.log('order');
       console.log(order);
       
-      this.userRef.orderByChild('merchant_id').equalTo(order.merchant_id).once('value', (snap) => {
+      this.userRef.orderByChild('merchant_id').equalTo(parseInt(order.merchant_id)).once('value', (snap) => {
           if (snap.val()) {
               console.log(snap.val());
               
@@ -111,8 +113,10 @@ export class OrderProvider {
           }
 
           var orderMerchants = snap.val();
+          console.log('orderMerchants');
+          console.log(orderMerchants);
           
-          this.sendNotification(orderMerchants[1], order);
+          this.sendNotification(orderMerchants, order);
           this.events.publish('orderSubmited');
       });
   }
@@ -120,35 +124,46 @@ export class OrderProvider {
   setStatus(order_id, status) {
       this.orderRef.child(order_id).child('status').set(status)
       .then(function() {
-          console.log('Synchronization succeeded');
+          //console.log('Synchronization succeeded');
       })
       .catch(function(error) {
-          console.log('Synchronization failed');
+          //console.log('Synchronization failed');
       }); 
       
       this.events.publish('statusOrderupdated');
   }
   
   sendNotification(merchantUser, order) {  
-      let body = {
-          notification:{
-              title: "New Order",
-              body: "You have new order from "+order.username,
-              sound: "default",
-              click_action: "FCM_PLUGIN_ACTIVITY",
-              icon: "fcm_push_icon"
-          },
-            to: merchantUser.google_token,
-            priority: "high",
-            restricted_package_name: ""
-        }
+          console.log('merchantUser');
+          console.log(merchantUser.google_token);
+          
+          for (var key in merchantUser) {
+              console.log(merchantUser[key]);
+              console.log(merchantUser[key].google_token);
+          
+              if(merchantUser[key].google_token) {
+              let body = {
+                  notification:{
+                      title: "New Order",
+                      body: "You have new order from "+order.username,
+                      sound: "default",
+                      click_action: "FCM_PLUGIN_ACTIVITY",
+                      icon: "fcm_push_icon"
+                  },
+                    to: merchantUser[key].google_token,
+                    priority: "high",
+                    restricted_package_name: ""
+                }
         
-        console.log('body');
-        console.log(body);
+                console.log('body');
+                console.log(body);
         
-        let options = new HttpHeaders().set('Content-Type','application/json');
-        this.http.post("https://fcm.googleapis.com/fcm/send",body,{
-            headers: options.set('Authorization', 'key=AIzaSyB_Uri3TyhXANQlt75nWujMByipC1yigi0'),
-        }).subscribe();
+                let options = new HttpHeaders().set('Content-Type','application/json');
+                this.http.post("https://fcm.googleapis.com/fcm/send",body,{
+                    headers: options.set('Authorization', 'key=AIzaSyB_Uri3TyhXANQlt75nWujMByipC1yigi0'),
+                }).subscribe();
+                }
+          }
+          
   }
 }

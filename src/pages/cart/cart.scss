@@ -60,5 +60,18 @@ page-cart {
         font-size:31px;
     }
     }
+    
+
+    .order-btn {
+        background: #F20A0A;
+        border: 1px solid #F20A0A;
+        font-size:1.5em;
+        color:#FFF;
+        opacity:unset;
+        font-weight: bold;
+    }
+    .order-btn:hover{
+        background-color: #F20A0A !important;
+    }
 
 }

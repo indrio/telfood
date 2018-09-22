@@ -1,6 +1,6 @@
 page-signup {
     .login-content {
-        background-image: url('../../assets/imgs/background-sized.jpg');
+        background-image: url('../assets/imgs/background-sized.jpg');
         background-repeat: no-repeat;
         background-size:cover;
         .logo-row {
@@ -46,6 +46,9 @@ page-signup {
             color:#FFF;
             opacity:unset;
             font-weight: bold;
+        }
+        .submit-btn:hover{
+            background-color: #F20A0A !important;
         }
         .register-btn {
             color: #ffffff;

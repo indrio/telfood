@@ -18,6 +18,15 @@ export class CartProvider {
     
     addToCart(product) {
         return this.getOrders().then(result => {
+            
+            console.log('result');
+            console.log(result);
+            
+            if(result && result.cartItems.length == 0) {
+                result.merchant_id = product.merchant_id;
+                result.totalPrice = 0;
+            }
+            
             if(result && (result.merchant_id != product.merchant_id)) {
                 return null;
             }
@@ -50,7 +59,7 @@ export class CartProvider {
                 }
             } else {
                 return this.storage.set(CART_KEY, {
-                    merchant_id:product.merchant_id,
+                    merchant_id:parseInt(product.merchant_id),
                     cartItems:[product],
                     totalPrice:product.qty * product.price, 
                     delivery_address:'', 

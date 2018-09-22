@@ -18,7 +18,7 @@ const MENU_KEY = 'stored_menus';
 @Injectable()
 export class MerchantMenuProvider {
     menuRef = firebase.database().ref("merchant_menu");
-    menus: Array<{id: string, title: string, description: string, photo: string, price: number}> = [];
+    menus: Array<{id: string, merchant_id: string, title: string, description: string, photo: string, price: number}> = [];
 
     constructor(public events: Events, private storage: Storage) {}
 
@@ -45,7 +45,7 @@ export class MerchantMenuProvider {
     }
     
     async searchMenu(searchTerm) {
-        console.log(searchTerm);
+        //console.log(searchTerm);
         this.menus = [];
         
         if(!searchTerm) {
@@ -54,11 +54,11 @@ export class MerchantMenuProvider {
         }
         
         let storedMenus = this.storage.get(MENU_KEY).then(result => {
-            console.log('result');
-            console.log(result);
+            //console.log('result');
+            //console.log(result);
             if(!result || (new Date().getTime() - result.timestamp > ((1*60*60)*1000))) {
                 this.menuRef.once('value', (snap) => {
-                    console.log(snap);
+                    //console.log(snap);
                     if (snap.val()) {
                         var tempMenus = snap.val();
                         var parseMenus = [];
@@ -90,8 +90,8 @@ export class MerchantMenuProvider {
                 });
             }
              else {
-                console.log('result.menus');
-                console.log(result.menus);
+                //console.log('result.menus');
+                //console.log(result.menus);
                 
                 var tempMenus = JSON.parse(result.menus).filter((item) => {
                     return item.title.search(new RegExp(searchTerm,"i")) > -1;
@@ -110,8 +110,8 @@ export class MerchantMenuProvider {
                     this.menus.push(singleMenu);
                 }
                 
-                console.log('this.menus');
-                console.log(this.menus);
+                //console.log('this.menus');
+                //console.log(this.menus);
                      
                 this.events.publish('menusSearchLoaded');
             }

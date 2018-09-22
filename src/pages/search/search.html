@@ -26,11 +26,15 @@
         <ion-thumbnail item-start>
           <img src="{{menu.photo}}">
         </ion-thumbnail>
+        <h3>{{menu.merchant.name}}</h3>
         <h2>{{menu.title}}</h2>
         <p>{{menu.description}}</p>
         <br/>
         <h2>Rp.{{menu.price | number:0}}</h2>
-        <button ion-button clear item-end (click)="addToCart(menu)">
+        <button ion-button clear item-end 
+            *ngIf="checkShopStatus(menu.merchant.open_hour)"
+            (click)="addToCart(menu)">
+            
             <ion-icon name="add-circle" color="danger"></ion-icon>
         </button>
       </ion-item>

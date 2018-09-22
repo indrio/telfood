@@ -72,11 +72,17 @@ export class LoginPage {
                 else if(this.auth.getUserInfo().user_type == 'merchant') {
                     if(this.platform.is('cordova')) {
                         this.fcm.getToken().then(token => {
-                            console.log('token : '+token);
+                            console.log('getToken : '+token);
                         
                             this.auth.updateToken(token);
                         });
                     
+                        this.fcm.onTokenRefresh().subscribe(token => {
+                            console.log('onTokenRefresh : '+token);
+                        
+                            this.auth.updateToken(token);
+                        });
+                        
                         this.fcm.onNotification().subscribe(data => {
                             if(data.wasTapped){
                                 console.log("Received in background");
