@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 
 import { Events } from 'ionic-angular';
 
-import firebase from 'firebase/app';
-import 'firebase/database';
+import { HttpClient } from '@angular/common/http/';
+import { HttpHeaders } from '@angular/common/http';
 
 /*
   Generated class for the CategoryProvider provider.
@@ -13,28 +13,31 @@ import 'firebase/database';
 */
 @Injectable()
 export class CategoryProvider {
-    categoryRef = firebase.database().ref("category");
     categories: Array<{id: string, title: string, icon: string}> = [];
     
-    constructor(public events: Events) {}
+    API_URL = "http://localhost/~indrio/telfood/public/"
+    
+    constructor(public events: Events,
+                private http: HttpClient) {}
     
     getCategories() {
-        this.categoryRef.once('value', (snap) => {
-            this.categories = [];
-            if (snap.val()) {
-                var tempCategories = snap.val();
-                
-                for (var key in tempCategories) {
+        this.http.get(this.API_URL+'category').subscribe(data => {
+            console.log(data);
+            if(data) {
+                for (var key in data) {
                     let singleCategory = {
-                        id: key,
-                        title: tempCategories[key].title,
-                        icon: tempCategories[key].icon
+                        id: data[key].id_,
+                        title: data[key].title,
+                        icon: data[key].icon
                     };
                     
                     this.categories.push(singleCategory);
                 }
             }
+        
             this.events.publish('categoriesLoaded');
+        }, err => {
+            console.log(err);
         });
     }
 

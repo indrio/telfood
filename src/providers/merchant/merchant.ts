@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 
 import { Events } from 'ionic-angular';
 
-import firebase from 'firebase/app';
-import 'firebase/database';
+import { HttpClient } from '@angular/common/http/';
+import { HttpHeaders } from '@angular/common/http';
 
 /*
   Generated class for the MerchantProvider provider.
@@ -13,49 +13,55 @@ import 'firebase/database';
 */
 @Injectable()
 export class MerchantProvider {
-    merchantRef = firebase.database().ref("merchant");
     merchants: Array<{id: string, name: string, address: string, open_hour: string, icon: string}> = [];
     
-    constructor(public events: Events) {}
+    API_URL = "http://localhost/~indrio/telfood/public/"
+    
+    constructor(public events: Events,
+                private http: HttpClient) {}
     
     getMerchants(category = null) {
         if(category) {
-            this.merchantRef.orderByChild('category').equalTo(category.id).once('value', (snap) => {
-                this.merchants = [];
-                if (snap.val()) {
-                    var tempMerchants = snap.val();
-                    for (var key in tempMerchants) {
+            this.http.get(this.API_URL+'merchant/'+category).subscribe(data => {
+                //console.log(data);
+                if(data) {
+                    for (var key in data) {
                         let singleMerchant = {
-                            id: key,
-                            name: tempMerchants[key].name,
-                            address: tempMerchants[key].address,
-                            open_hour: tempMerchants[key].open_hour,
-                            icon: tempMerchants[key].icon
+                            id: data[key].id_,
+                            name: data[key].name,
+                            address: data[key].address,
+                            open_hour: data[key].open_hour,
+                            icon: data[key].icon
                         };
                     
                         this.merchants.push(singleMerchant);
                     }
                 }
+        
                 this.events.publish('merchantsLoaded');
+            }, err => {
+                console.log(err);
             });
         } else {
-            this.merchantRef.once('value', (snap) => {
-                this.merchants = [];
-                if (snap.val()) {
-                    var tempMerchants = snap.val();
-                    for (var key in tempMerchants) {
+            this.http.get(this.API_URL+'merchant').subscribe(data => {
+                //console.log(data);
+                if(data) {
+                    for (var key in data) {
                         let singleMerchant = {
-                            id: key,
-                            name: tempMerchants[key].name,
-                            address: tempMerchants[key].address,
-                            open_hour: tempMerchants[key].open_hour,
-                            icon: tempMerchants[key].icon
+                            id: data[key].id_,
+                            name: data[key].name,
+                            address: data[key].address,
+                            open_hour: data[key].open_hour,
+                            icon: data[key].icon
                         };
                     
                         this.merchants.push(singleMerchant);
                     }
                 }
+        
                 this.events.publish('merchantsLoaded');
+            }, err => {
+                console.log(err);
             });
         }
     }

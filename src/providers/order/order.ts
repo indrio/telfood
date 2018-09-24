@@ -4,9 +4,6 @@ import { HttpHeaders } from '@angular/common/http';
 
 import { Events } from 'ionic-angular';
 
-import firebase from 'firebase/app';
-import 'firebase/database';
-
 /*
   Generated class for the OrderProvider provider.
 
@@ -15,9 +12,9 @@ import 'firebase/database';
 */
 @Injectable()
 export class OrderProvider {
-    orderRef = firebase.database().ref("order");
-    userRef = firebase.database().ref("user");
-    merchantRef = firebase.database().ref("merchant");
+    //orderRef = firebase.database().ref("order");
+    //userRef = firebase.database().ref("user");
+    //merchantRef = firebase.database().ref("merchant");
     
     orders: Array<{
         order_date:number,
@@ -38,7 +35,9 @@ export class OrderProvider {
         status:string,
         expanded:boolean
     }>;
-
+    
+    API_URL = "http://localhost/~indrio/telfood/public/"
+    
   constructor(public events: Events,
               private http: HttpClient) { }
 
@@ -47,81 +46,124 @@ export class OrderProvider {
       console.log('user');
       console.log(user);
       if(user && user.user_type == 'user') {
-          this.orderRef.orderByChild('username').equalTo(user.username).once('value', (snap) => {
+          this.http.get(this.API_URL+'orders/username/'+user.username).subscribe(data => {
+              console.log(data);
               this.orders = [];
-              if (snap.val()) {
-                  var tempOrders = snap.val();
-              
-                  for (var key in tempOrders) {
+              if(data) {
+                  for (var key in data) {
                       let singleOrder = {
-                          id: key,
-                          order_date: tempOrders[key].order_date,
-                          merchant_id: tempOrders[key].merchant_id,
-                          username: tempOrders[key].username,
-                          cartItems: tempOrders[key].cartItems,
-                          totalPrice: tempOrders[key].totalPrice,
-                          delivery_address: tempOrders[key].delivery_address,
-                          delivery_phone: tempOrders[key].delivery_phone,
-                          status: tempOrders[key].status,
+                          id: data[key].id_,
+                          order_date: data[key].order_date,
+                          merchant_id: data[key].merchant_id,
+                          username: data[key].username,
+                          cartItems: data[key].cartItems,
+                          totalPrice: data[key].totalPrice,
+                          delivery_address: data[key].delivery_address,
+                          delivery_phone: data[key].delivery_phone,
+                          status: data[key].status,
                           expanded:false
                       };
                   
                       this.orders.push(singleOrder);
                   }
               }
+              console.log(this.orders);
+              
               this.events.publish('ordersLoaded');
+          }, err => {
+              console.log(err);
           });
       } else if(user.merchant_id != null) {
-          this.orderRef.orderByChild('merchant_id').equalTo(parseInt(user.merchant_id)).once('value', (snap) => {
-              this.orders = [];
-              if (snap.val()) {
-                  var tempOrders = snap.val();
-              
-                  for (var key in tempOrders) {
+          this.http.get(this.API_URL+'orders/merchant_id/'+user.merchant_id).subscribe(data => {
+              //console.log(data);
+              if(data) {
+                  for (var key in data) {
                       let singleOrder = {
-                          id: key,
-                          order_date: tempOrders[key].order_date,
-                          merchant_id: tempOrders[key].merchant_id,
-                          username: tempOrders[key].username,
-                          cartItems: tempOrders[key].cartItems,
-                          totalPrice: tempOrders[key].totalPrice,
-                          delivery_address: tempOrders[key].delivery_address,
-                          delivery_phone: tempOrders[key].delivery_phone,
-                          status: tempOrders[key].status,
+                          id: data[key].id_,
+                          order_date: data[key].order_date,
+                          merchant_id: data[key].merchant_id,
+                          username: data[key].username,
+                          cartItems: data[key].cartItems,
+                          totalPrice: data[key].totalPrice,
+                          delivery_address: data[key].delivery_address,
+                          delivery_phone: data[key].delivery_phone,
+                          status: data[key].status,
                           expanded:false
                       };
                   
                       this.orders.push(singleOrder);
                   }
               }
+    
               this.events.publish('ordersLoaded');
+          }, err => {
+              console.log(err);
           });
       }
   }
   
   submitOrder(order) {
-      console.log('order');
-      console.log(order);
+      //console.log('order');
+      //console.log(order);
       
-      this.userRef.orderByChild('merchant_id').equalTo(parseInt(order.merchant_id)).once('value', (snap) => {
-          if (snap.val()) {
-              console.log(snap.val());
-              
-              this.orderRef.push(order).then(function() {
-                  console.log('Synchronization succeeded');
-              });
-          }
+      for (var i = 0; i < order.cartItems.length; i++) {
+          delete order.cartItems[i].id;
+          delete order.cartItems[i].merchant_id;
+      }
 
-          var orderMerchants = snap.val();
-          console.log('orderMerchants');
-          console.log(orderMerchants);
+      //console.log(order);
+
+      this.http.post(this.API_URL+'order', order, {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*'
+        }
+      ).subscribe(data => {
+          //console.log(data);
+
+          this.http.get(this.API_URL+'user/merchant/'+order.merchant_id).subscribe(merchantUser => {
+              if(merchantUser) {
+                  for (var key in merchantUser) {
+                      //console.log(merchantUser[key]);
+                      //console.log(merchantUser[key].google_token);
           
-          this.sendNotification(orderMerchants, order);
-          this.events.publish('orderSubmited');
+                      if(merchantUser[key].google_token) {
+                          let body = {
+                              notification:{
+                                  title: "New Order",
+                                  body: "You have new order from "+order.username,
+                                  sound: "default",
+                                  click_action: "FCM_PLUGIN_ACTIVITY",
+                                  icon: "fcm_push_icon"
+                              },
+                                to: merchantUser[key].google_token,
+                                priority: "high",
+                                restricted_package_name: ""
+                            }
+        
+                            //console.log('body');
+                            //console.log(body);
+        
+                            let options = new HttpHeaders().set('Content-Type','application/json');
+                            this.http.post("https://fcm.googleapis.com/fcm/send",body,{
+                                headers: options.set('Authorization', 'key=AIzaSyB_Uri3TyhXANQlt75nWujMByipC1yigi0'),
+                            }).subscribe(response => {
+                                console.log('orderSubmited');
+                            });
+                        }
+                  }
+
+                  this.events.publish('orderSubmited');
+              }
+          }, err => {
+              console.log(err);
+          });
+      }, err => {
+          console.log(err);
       });
   }
   
   setStatus(order_id, status) {
+      /*
       this.orderRef.child(order_id).child('status').set(status)
       .then(function() {
           //console.log('Synchronization succeeded');
@@ -131,12 +173,14 @@ export class OrderProvider {
       }); 
       
       this.events.publish('statusOrderupdated');
+      */
   }
   
+  /*
   sendNotification(merchantUser, order) {  
           console.log('merchantUser');
           console.log(merchantUser.google_token);
-          
+
           for (var key in merchantUser) {
               console.log(merchantUser[key]);
               console.log(merchantUser[key].google_token);
@@ -164,6 +208,6 @@ export class OrderProvider {
                 }).subscribe();
                 }
           }
-          
   }
+  */
 }

@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 
 import { Events } from 'ionic-angular';
 
-import firebase from 'firebase/app';
-import 'firebase/database';
+import { HttpClient } from '@angular/common/http/';
+import { HttpHeaders } from '@angular/common/http';
 
 import { Storage } from '@ionic/storage';
 
@@ -17,30 +17,38 @@ const MENU_KEY = 'stored_menus';
 */
 @Injectable()
 export class MerchantMenuProvider {
-    menuRef = firebase.database().ref("merchant_menu");
     menus: Array<{id: string, merchant_id: string, title: string, description: string, photo: string, price: number}> = [];
-
-    constructor(public events: Events, private storage: Storage) {}
+    
+    API_URL = "http://localhost/~indrio/telfood/public/"
+    
+    constructor(public events: Events, 
+                private storage: Storage,
+                private http: HttpClient) {}
 
     getMenus(merchant) {
-        this.menuRef.orderByChild('merchant_id').equalTo(merchant.id).once('value', (snap) => {
-            this.menus = [];
-            if (snap.val()) {
-                var tempMenus = snap.val();
-                for (var key in tempMenus) {
+        console.log(merchant);
+        this.menus = [];
+        
+        this.http.get(this.API_URL+'merchant_menu/'+merchant['id']).subscribe(data => {
+            //console.log(data);
+            if(data) {
+                for (var key in data) {
                     let singleMenu = {
                         id: key,
-                        merchant_id: tempMenus[key].merchant_id,
-                        title: tempMenus[key].title,
-                        description: tempMenus[key].description,
-                        photo: tempMenus[key].photo,
-                        price: tempMenus[key].price
+                        merchant_id: data[key].merchant_id,
+                        title: data[key].title,
+                        description: data[key].description,
+                        photo: data[key].photo,
+                        price: data[key].price
                     };
                     
                     this.menus.push(singleMenu);
                 }
             }
+    
             this.events.publish('menusLoaded');
+        }, err => {
+            console.log(err);
         });
     }
     
@@ -57,20 +65,21 @@ export class MerchantMenuProvider {
             //console.log('result');
             //console.log(result);
             if(!result || (new Date().getTime() - result.timestamp > ((1*60*60)*1000))) {
-                this.menuRef.once('value', (snap) => {
-                    //console.log(snap);
-                    if (snap.val()) {
-                        var tempMenus = snap.val();
+
+                this.http.get(this.API_URL+'merchant_menu').subscribe(data => {
+                    console.log(data);
+                    if(data) {
+                        //var tempMenus = snap.val();
                         var parseMenus = [];
 
-                        for (var key in tempMenus) {
+                        for (var key in data) {
                             let singleMenu = {
                                 id: key,
-                                merchant_id: tempMenus[key].merchant_id,
-                                title: tempMenus[key].title,
-                                description: tempMenus[key].description,
-                                photo: tempMenus[key].photo,
-                                price: tempMenus[key].price
+                                merchant_id: data[key].merchant_id,
+                                title: data[key].title,
+                                description: data[key].description,
+                                photo: data[key].photo,
+                                price: data[key].price
                             };
                             
                             if(singleMenu.title.search(new RegExp(searchTerm,"i")) > -1) {
@@ -85,8 +94,10 @@ export class MerchantMenuProvider {
                             'menus': JSON.stringify(parseMenus)
                         });
                     }
-
-                    this.events.publish('menusSearchLoaded');
+    
+                    this.events.publish('menusLoaded');
+                }, err => {
+                    console.log(err);
                 });
             }
              else {

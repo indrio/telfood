@@ -88,7 +88,6 @@ export class HomePage {
     }
     
     getMerchants(){
-        
         let loader = this.loadingCtrl.create({
             content: 'Loading Merchants..'
         });

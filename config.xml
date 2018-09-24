@@ -2,7 +2,7 @@
 <widget id="com.hexa.telfood" version="0.2.3" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Indifood Court</name>
     <description>Indifood Court is a Food Marketplace</description>
-    <author email="indrio@hexa.co.id" href="http://hexa.id/">Hexa Digital Solusindo</author>
+    <author email="ptsca.office@gmail.com" href="http://ptsca.co.id">Hexa Digital Solusindo</author>
     <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />

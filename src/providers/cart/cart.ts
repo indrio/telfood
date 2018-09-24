@@ -19,8 +19,8 @@ export class CartProvider {
     addToCart(product) {
         return this.getOrders().then(result => {
             
-            console.log('result');
-            console.log(result);
+            //console.log('result');
+            //console.log(result);
             
             if(result && result.cartItems.length == 0) {
                 result.merchant_id = product.merchant_id;
@@ -32,12 +32,12 @@ export class CartProvider {
             }
             
             if (result && result.cartItems) {
-                console.log('product');
-                console.log(product);
-                console.log('result.cartItems');
-                console.log(result.cartItems);
+                //console.log('product');
+                //console.log(product);
+                //console.log('result.cartItems');
+                //console.log(result.cartItems);
                 
-                console.log('is contains : '+this.containsObject(product, result.cartItems));
+                //console.log('is contains : '+this.containsObject(product, result.cartItems));
                 
                 if (!this.containsObject(product, result.cartItems)) {
                     result.cartItems.push(product);

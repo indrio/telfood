@@ -169,20 +169,12 @@ export class CartPage {
       
       this.orderService.submitOrder(order);
       
-      /*
-      
-      this.cartService.removeAllCartItems();
-
-      this.nav.setRoot(HomePage);
-      
-      loader.dismiss();
-      */
       this.events.subscribe('orderSubmited', () => {
           this.cartService.removeAllCartItems();
-
-          this.nav.setRoot(HomePage);
           
           loader.dismiss();
+          
+          this.nav.setRoot(HomePage);
       });
       
   }
