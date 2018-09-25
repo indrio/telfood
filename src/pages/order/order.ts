@@ -69,7 +69,9 @@ export class OrderPage {
         this.orderService.getOrders(loggedUser);
         
         this.events.subscribe('ordersLoaded', () => {
-            this.orders = this.orderService.orders.sort((a, b) => a.order_date <= b.order_date ? 1 : -1);
+            if(this.orderService.orders) {
+                this.orders = this.orderService.orders.sort((a, b) => a.order_date <= b.order_date ? 1 : -1);
+            }
 
             this.getMerchants();
             

@@ -35,7 +35,7 @@ export class AuthServiceProvider {
     
     currentUser: User;
     
-    API_URL = "http://localhost/~indrio/telfood/public/"
+    API_URL = "http://indifood.skytechserver.com/api/public/"
     
     constructor(public storage: Storage,
                 private events: Events,
@@ -74,25 +74,30 @@ export class AuthServiceProvider {
   }
   
   public updateToken(token) {
+      console.log('updateToken');
       console.log(this.currentUser);
 
       // At this point store the credentials to your backend!
-      return Observable.create(observer => {
-          let body = { google_token: token }
-          this.http.put(this.API_URL+'user'+this.currentUser.username, body).subscribe(data => {
+      //return Observable.create(observer => {
+          let body = { google_token: token };
+          console.log('post token ');
+          console.log(body);
+          console.log("to : "+this.API_URL+'user/'+this.currentUser.username);
+          
+          this.http.put(this.API_URL+'user/'+this.currentUser.username, body).subscribe(data => {
               console.log(data);
               console.log('Synchronization succeeded');
               
-              observer.next(true);
-              observer.complete();
+              //observer.next(true);
+              //observer.complete();
           }, err => {
               console.log(err);
               console.log('Synchronization failed');
 
-              observer.next(false);
-              observer.complete();
+              //observer.next(false);
+              //observer.complete();
           });
-      });
+          //});
   }
   
   public register(credentials) {

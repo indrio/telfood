@@ -36,18 +36,18 @@ export class OrderProvider {
         expanded:boolean
     }>;
     
-    API_URL = "http://localhost/~indrio/telfood/public/"
+    API_URL = "http://indifood.skytechserver.com/api/public/"
     
   constructor(public events: Events,
               private http: HttpClient) { }
 
   
   getOrders(user) {
-      console.log('user');
-      console.log(user);
+      //console.log('user');
+      //console.log(user);
       if(user && user.user_type == 'user') {
           this.http.get(this.API_URL+'orders/username/'+user.username).subscribe(data => {
-              console.log(data);
+              //console.log(data);
               this.orders = [];
               if(data) {
                   for (var key in data) {
@@ -67,7 +67,7 @@ export class OrderProvider {
                       this.orders.push(singleOrder);
                   }
               }
-              console.log(this.orders);
+              //console.log(this.orders);
               
               this.events.publish('ordersLoaded');
           }, err => {
@@ -76,6 +76,7 @@ export class OrderProvider {
       } else if(user.merchant_id != null) {
           this.http.get(this.API_URL+'orders/merchant_id/'+user.merchant_id).subscribe(data => {
               //console.log(data);
+              this.orders = [];
               if(data) {
                   for (var key in data) {
                       let singleOrder = {
@@ -113,11 +114,11 @@ export class OrderProvider {
 
       //console.log(order);
 
-      this.http.post(this.API_URL+'order', order, {
+      this.http.post(this.API_URL+'order', order, { headers: {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': '*'
         }
-      ).subscribe(data => {
+      }).subscribe(data => {
           //console.log(data);
 
           this.http.get(this.API_URL+'user/merchant/'+order.merchant_id).subscribe(merchantUser => {
@@ -140,8 +141,8 @@ export class OrderProvider {
                                 restricted_package_name: ""
                             }
         
-                            //console.log('body');
-                            //console.log(body);
+                            console.log('body');
+                            console.log(body);
         
                             let options = new HttpHeaders().set('Content-Type','application/json');
                             this.http.post("https://fcm.googleapis.com/fcm/send",body,{

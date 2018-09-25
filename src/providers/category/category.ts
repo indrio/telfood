@@ -15,7 +15,7 @@ import { HttpHeaders } from '@angular/common/http';
 export class CategoryProvider {
     categories: Array<{id: string, title: string, icon: string}> = [];
     
-    API_URL = "http://localhost/~indrio/telfood/public/"
+    API_URL = "http://indifood.skytechserver.com/api/public/"
     
     constructor(public events: Events,
                 private http: HttpClient) {}

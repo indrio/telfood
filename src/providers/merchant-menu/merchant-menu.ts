@@ -19,7 +19,7 @@ const MENU_KEY = 'stored_menus';
 export class MerchantMenuProvider {
     menus: Array<{id: string, merchant_id: string, title: string, description: string, photo: string, price: number}> = [];
     
-    API_URL = "http://localhost/~indrio/telfood/public/"
+    API_URL = "http://indifood.skytechserver.com/api/public/"
     
     constructor(public events: Events, 
                 private storage: Storage,
