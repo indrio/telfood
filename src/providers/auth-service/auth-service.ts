@@ -47,8 +47,8 @@ export class AuthServiceProvider {
       } else {
           return Observable.create(observer => {
               this.http.get(this.API_URL+'user/'+credentials.username).subscribe(data => {
-                  console.log(data);
-                  if(data) {
+                  
+                  if(data['password'] == credentials.password) {
                       this.currentUser = new User(
                           data['username'], 
                           data['password'], 
